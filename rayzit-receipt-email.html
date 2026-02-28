@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT - Donation Receipt</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #e8edf5;
+    padding: 30px 16px;
+    min-height: 100vh;
+  }
+
+  /* Email container — simulates an inbox */
+  .email-wrapper {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .email-meta {
+    background: white;
+    border-radius: 12px 12px 0 0;
+    padding: 14px 20px;
+    border-bottom: 1px solid #eee;
+  }
+  .email-meta .subject { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+  .email-meta .from { font-size: 12px; color: #888; font-weight: 500; }
+
+  /* Email body */
+  .email-body {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  /* Header */
+  .email-header {
+    background: linear-gradient(135deg, #4a6cf7, #7b93ff);
+    padding: 32px 32px 48px;
+    text-align: center;
+    position: relative;
+  }
+  .email-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: white;
+    border-radius: 32px 32px 0 0;
+  }
+  .org-logo-wrap {
+    width: 64px;
+    height: 64px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 12px;
+    backdrop-filter: blur(4px);
+  }
+  .org-name-header {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 4px;
+  }
+  .receipt-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Content */
+  .email-content { padding: 8px 32px 32px; }
+
+  .greeting {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .greeting span { color: #4a6cf7; }
+
+  .personal-message {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    text-align: center;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  /* Donation summary card */
+  .donation-card {
+    background: linear-gradient(135deg, #f0f4ff, #e8edf5);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(74,108,247,0.12);
+  }
+  .donation-card .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .donation-amount {
+    font-size: 42px;
+    font-weight: 900;
+    color: #4a6cf7;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .donation-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(74,108,247,0.1);
+    color: #4a6cf7;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .donation-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .detail-item .detail-label { font-size: 10px; color: #aaa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .detail-item .detail-value { font-size: 13px; color: #1a1a2e; font-weight: 700; margin-top: 2px; }
+
+  /* Impact section */
+  .impact-section {
+    background: #fff9f0;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #ff9a3c;
+  }
+  .impact-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #ff9a3c;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .impact-text {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* Campaign progress */
+  .progress-section {
+    margin-bottom: 20px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+  .progress-pct { font-size: 13px; font-weight: 800; color: #4a6cf7; }
+  .progress-bar-bg {
+    background: #e8edf5;
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4a6cf7, #7b93ff);
+    border-radius: 20px;
+    width: 68%;
+    animation: fillBar 1.5s ease-out;
+  }
+  @keyframes fillBar { from { width: 0; } to { width: 68%; } }
+  .progress-sub { font-size: 11px; color: #888; font-weight: 500; }
+
+  /* CTA */
+  .cta-section { text-align: center; margin-bottom: 24px; }
+  .share-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 14px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(34,197,94,0.35);
+  }
+  .share-sub { font-size: 11px; color: #aaa; margin-top: 8px; font-weight: 500; }
+
+  /* Tax info */
+  .tax-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  .tax-title { font-size: 12px; font-weight: 700; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .tax-row { display: flex; justify-content: space-between; font-size: 12px; color: #888; font-weight: 500; padding: 3px 0; }
+  .tax-row span:last-child { font-weight: 700; color: #555; }
+
+  /* Footer */
+  .email-footer {
+    background: #f8f9fa;
+    padding: 20px 32px;
+    text-align: center;
+    border-top: 1px solid #eee;
+  }
+  .powered-by { font-size: 12px; color: #aaa; font-weight: 500; margin-bottom: 4px; }
+  .powered-by strong { color: #4a6cf7; }
+  .footer-links { font-size: 11px; color: #ccc; }
+  .footer-links a { color: #aaa; text-decoration: none; margin: 0 6px; }
+
+  /* Customize toggle for demo */
+  .demo-toggle {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .demo-toggle label { font-size: 12px; font-weight: 700; color: #666; }
+  .demo-toggle select, .demo-toggle input[type=text] {
+    border: 2px solid #e8edf5;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+  }
+  .demo-toggle select:focus, .demo-toggle input:focus { border-color: #4a6cf7; }
+  .demo-label { font-size: 11px; font-weight: 700; color: #4a6cf7; background: #f0f4ff; padding: 4px 10px; border-radius: 20px; }
+</style>
+</head>
+<body>
+
+<div class="email-wrapper">
+
+  <!-- Demo controls -->
+  <div class="demo-toggle">
+    <span class="demo-label">✏️ Customize Demo</span>
+    <label>Org:</label>
+    <select onchange="updateOrg(this.value)">
+      <option value="church">⛪ Trinity Church</option>
+      <option value="school">🏫 Lincoln Elementary PTA</option>
+      <option value="shelter">🐾 City Animal Shelter</option>
+    </select>
+    <label>Type:</label>
+    <select onchange="updateType(this.value)">
+      <option value="onetime">One-Off</option>
+      <option value="monthly">Monthly</option>
+      <option value="roundup">Round-Up</option>
+    </select>
+  </div>
+
+  <!-- Email meta bar -->
+  <div class="email-meta">
+    <div class="subject" id="email-subject">🎉 Thank you for your gift to Trinity Church!</div>
+    <div class="from">From: Trinity Church via RAYZIT &lt;giving@rayzitapp.com&gt; · Just now</div>
+  </div>
+
+  <!-- Email body -->
+  <div class="email-body">
+
+    <!-- Header -->
+    <div class="email-header" id="email-header" style="background: linear-gradient(135deg, #4a6cf7, #7b93ff)">
+      <div class="org-logo-wrap" id="org-logo">⛪</div>
+      <div class="org-name-header" id="org-name-header">Trinity Church</div>
+      <div class="receipt-tag">Donation Receipt</div>
+    </div>
+
+    <!-- Content -->
+    <div class="email-content">
+      <div class="greeting">You're amazing, <span id="donor-name">Marcus</span>! 🙏</div>
+      <div class="personal-message" id="personal-message">
+        Your generosity means everything to us. Because of supporters like you, Trinity Church can keep our doors open and our community strong. This is your official donation receipt — please save it for your records.
+      </div>
+
+      <!-- Donation card -->
+      <div class="donation-card">
+        <div class="card-label">Your Donation</div>
+        <div class="donation-amount" id="donation-amount">$25.00</div>
+        <div class="donation-type-badge" id="type-badge">💛 One-Off Donation</div>
+        <div class="donation-details">
+          <div class="detail-item">
+            <div class="detail-label">Date</div>
+            <div class="detail-value">Feb 18, 2026</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Transaction ID</div>
+            <div class="detail-value">#RYZ-28491</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Organization</div>
+            <div class="detail-value" id="org-detail">Trinity Church</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Payment</div>
+            <div class="detail-value">Visa •••• 4242</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact -->
+      <div class="impact-section">
+        <div class="impact-title">🌟 Your Impact</div>
+        <div class="impact-text" id="impact-text">
+          Your $25 gift brings us one step closer to our new roof goal. Every dollar you give helps protect our church's legacy and keeps our community's home standing strong for generations to come.
+        </div>
+      </div>
+
+      <!-- Campaign Progress -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <div class="progress-label" id="campaign-name">🎯 New Church Roof Campaign</div>
+          <div class="progress-pct">68%</div>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-sub">$6,800 raised of $10,000 goal · 32 days left</div>
+      </div>
+
+      <!-- Share CTA -->
+      <div class="cta-section">
+        <a href="#" class="share-btn">📣 Share This Campaign</a>
+        <div class="share-sub">Help us reach our goal — tell a friend!</div>
+      </div>
+
+      <!-- Tax info -->
+      <div class="tax-section">
+        <div class="tax-title">🧾 Tax Information</div>
+        <div class="tax-row"><span>Organization</span><span id="tax-org">Trinity Church</span></div>
+        <div class="tax-row"><span>Tax ID (EIN)</span><span>83-4521067</span></div>
+        <div class="tax-row"><span>Deductible Amount</span><span>$25.00</span></div>
+        <div class="tax-row"><span>No goods or services were provided in exchange for this gift.</span></div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+      <div class="powered-by">Powered by <strong>RAYZIT</strong> · Secure Digital Giving</div>
+      <div class="footer-links">
+        <a href="#">Manage Donations</a> ·
+        <a href="#">Privacy Policy</a> ·
+        <a href="#">Unsubscribe</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const orgs = {
+  church: {
+    name: 'Trinity Church',
+    logo: '⛪',
+    color: 'linear-gradient(135deg, #4a6cf7, #7b93ff)',
+    message: 'Your generosity means everything to us. Because of supporters like you, Trinity Church can keep our doors open and our community strong. This is your official donation receipt — please save it for your records.',
+    campaign: '🎯 New Church Roof Campaign',
+    impact: "Your $25 gift brings us one step closer to our new roof goal. Every dollar you give helps protect our church's legacy and keeps our community's home standing strong for generations to come."
+  },
+  school: {
+    name: 'Lincoln Elementary PTA',
+    logo: '🏫',
+    color: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+    message: 'On behalf of every student and teacher at Lincoln Elementary — thank you! Your support makes a real difference in our classrooms every single day. This is your official donation receipt.',
+    campaign: '🎯 New Playground Equipment',
+    impact: "Your $25 gift helps us bring new playground equipment to Lincoln Elementary. You're investing directly in the joy, health, and development of our kids. They thank you!"
+  },
+  shelter: {
+    name: 'City Animal Shelter',
+    logo: '🐾',
+    color: 'linear-gradient(135deg, #22c55e, #16a34a)',
+    message: "Every tail wag, every purr, every animal that finds a forever home — it's possible because of donors like you. Thank you for your generous gift to City Animal Shelter.",
+    campaign: '🎯 New Kennel Building Fund',
+    impact: "Your $25 gift helps us house, feed, and care for animals in need. On average, $25 feeds a shelter dog for an entire week. You just made a real difference in an animal's life."
+  }
+};
+
+const types = {
+  onetime: { label: '💛 One-Off Donation', amount: '$25.00' },
+  monthly: { label: '📅 Monthly Gift', amount: '$10.00/mo' },
+  roundup: { label: '🔄 Round-Up Donation', amount: '$0.57' }
+};
+
+function updateOrg(val) {
+  const org = orgs[val];
+  document.getElementById('org-logo').textContent = org.logo;
+  document.getElementById('org-name-header').textContent = org.name;
+  document.getElementById('email-header').style.background = org.color;
+  document.getElementById('email-subject').textContent = '🎉 Thank you for your gift to ' + org.name + '!';
+  document.getElementById('personal-message').textContent = org.message;
+  document.getElementById('org-detail').textContent = org.name;
+  document.getElementById('tax-org').textContent = org.name;
+  document.getElementById('campaign-name').textContent = org.campaign;
+  document.getElementById('impact-text').textContent = org.impact;
+}
+
+function updateType(val) {
+  const type = types[val];
+  document.getElementById('type-badge').textContent = type.label;
+  document.getElementById('donation-amount').textContent = type.amount;
+}
+</script>
+</body>
+</html>

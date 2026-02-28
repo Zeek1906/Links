@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT Widget v2 - App Matched</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #e8edf5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Demo nonprofit site background */
+  .demo-site {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    color: #ccc;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .demo-site h1 { font-size: 32px; color: #ddd; font-weight: 800; }
+
+  /* ===== LAUNCHER BUTTON ===== */
+  #rayzit-launcher {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #4a6cf7, #6a8dff);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 22px 14px 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(74, 108, 247, 0.45);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: pulse-blue 3s ease-in-out infinite;
+  }
+  #rayzit-launcher:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(74, 108, 247, 0.6);
+  }
+  @keyframes pulse-blue {
+    0%, 100% { box-shadow: 0 6px 24px rgba(74,108,247,0.45); }
+    50% { box-shadow: 0 6px 36px rgba(74,108,247,0.7); }
+  }
+
+  /* RAYZIT Logo SVG inline */
+  .launcher-logo {
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    color: #4a6cf7;
+    flex-shrink: 0;
+  }
+
+  /* ===== WIDGET PANEL ===== */
+  #rayzit-widget {
+    position: fixed;
+    bottom: 86px;
+    right: 24px;
+    width: 345px;
+    background: #f0f4ff;
+    border-radius: 28px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.2), 0 0 0 1px rgba(74,108,247,0.12);
+    z-index: 999;
+    overflow: hidden;
+    transform: scale(0.88) translateY(16px);
+    transform-origin: bottom right;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+  }
+  #rayzit-widget.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ===== HEADER ===== */
+  .widget-header {
+    background: linear-gradient(135deg, #4a6cf7, #7b93ff);
+    padding: 16px 18px 20px;
+    color: white;
+    position: relative;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+  .org-name {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .close-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    font-family: 'Poppins', sans-serif;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.35); }
+
+  /* Org icon area */
+  .org-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .org-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    backdrop-filter: blur(4px);
+  }
+  .org-info-text { }
+  .org-info-text .org-title { font-size: 15px; font-weight: 700; }
+  .org-info-text .org-sub { font-size: 11px; opacity: 0.8; font-weight: 500; }
+
+  /* ===== WHITE CARD BODY ===== */
+  .widget-card {
+    background: white;
+    border-radius: 24px 24px 0 0;
+    margin-top: -8px;
+    padding: 20px 18px 18px;
+    min-height: 200px;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Screen 1: Donation type selector (matches app screen 3) */
+  .screen-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #1a1a2e;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .screen-sub {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .donation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid #e8edf5;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fafbff;
+    position: relative;
+    overflow: hidden;
+  }
+  .donation-card:hover, .donation-card.selected {
+    border-color: #4a6cf7;
+    background: #f0f4ff;
+  }
+  .donation-card .card-left { }
+  .donation-card .card-type {
+    font-size: 17px;
+    font-weight: 700;
+    color: #4a6cf7;
+    margin-bottom: 3px;
+  }
+  .donation-card .card-desc {
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+    max-width: 160px;
+    line-height: 1.4;
+  }
+  .donation-card .card-illustration {
+    width: 70px;
+    height: 60px;
+    background: linear-gradient(135deg, #e8edf5, #d8e2ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  /* ===== SCREEN 2: Amount picker ===== */
+  .back-btn {
+    background: none;
+    border: none;
+    color: #4a6cf7;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Round-up visual */
+  .roundup-box {
+    background: linear-gradient(135deg, #f0f4ff, #e4ecff);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 14px;
+    border: 2px dashed rgba(74,108,247,0.2);
+  }
+  .roundup-box .ru-label { font-size: 11px; color: #888; font-weight: 600; margin-bottom: 6px; }
+  .roundup-box .ru-amounts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 26px;
+    font-weight: 900;
+    color: #1a1a2e;
+  }
+  .roundup-box .ru-arrow { color: #4a6cf7; font-size: 18px; }
+  .roundup-box .ru-donated { color: #4a6cf7; }
+  .roundup-box .ru-sub { font-size: 11px; color: #4a6cf7; font-weight: 700; margin-top: 4px; }
+  .ru-slider-label { font-size: 12px; font-weight: 600; color: #666; margin-bottom: 6px; }
+  input[type=range] { width: 100%; accent-color: #4a6cf7; margin-bottom: 14px; cursor: pointer; }
+
+  /* Amount grid */
+  .amount-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .amt-btn {
+    border: 2px solid #e8edf5;
+    background: #fafbff;
+    border-radius: 12px;
+    padding: 12px 6px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+  }
+  .amt-btn:hover, .amt-btn.selected {
+    border-color: #4a6cf7;
+    background: #f0f4ff;
+    color: #4a6cf7;
+  }
+  .custom-wrap { margin-bottom: 14px; }
+  .custom-wrap input {
+    width: 100%;
+    border: 2px solid #e8edf5;
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .custom-wrap input:focus { border-color: #4a6cf7; }
+
+  /* Monthly tiers */
+  .monthly-tier {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid #e8edf5;
+    border-radius: 14px;
+    padding: 13px 16px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: #fafbff;
+    transition: all 0.18s;
+  }
+  .monthly-tier:hover, .monthly-tier.selected {
+    border-color: #4a6cf7;
+    background: #f0f4ff;
+  }
+  .tier-amount { font-size: 19px; font-weight: 800; color: #1a1a2e; }
+  .monthly-tier.selected .tier-amount { color: #4a6cf7; }
+  .tier-name { font-size: 11px; color: #888; font-weight: 500; }
+  .tier-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: #4a6cf7;
+    background: #e8edf5;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* CTA */
+  .cta-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(34,197,94,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .cta-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(34,197,94,0.5);
+  }
+
+  /* Success */
+  .success-wrap {
+    text-align: center;
+    padding: 16px 10px 8px;
+  }
+  .success-emoji { font-size: 52px; margin-bottom: 10px; animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+  .success-wrap h3 { font-size: 20px; font-weight: 800; color: #4a6cf7; margin-bottom: 6px; }
+  .success-wrap p { font-size: 12px; color: #888; font-weight: 500; line-height: 1.6; }
+  .success-again {
+    margin-top: 16px;
+    background: #f0f4ff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 22px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #4a6cf7;
+    cursor: pointer;
+  }
+
+  /* Footer */
+  .widget-footer {
+    text-align: center;
+    padding: 10px 18px 14px;
+    font-size: 10px;
+    color: #bbb;
+    font-weight: 500;
+    background: white;
+  }
+  .widget-footer strong { color: #4a6cf7; }
+</style>
+</head>
+<body>
+
+<div class="demo-site">
+  <h1>⛪ Trinity Church</h1>
+  <p>trinitychurch.org — nonprofit's own website</p>
+</div>
+
+<!-- Launcher -->
+<button id="rayzit-launcher" onclick="toggleWidget()">
+  <div class="launcher-logo">R</div>
+  Give Now
+</button>
+
+<!-- Widget -->
+<div id="rayzit-widget">
+
+  <!-- Header (matches app blue header) -->
+  <div class="widget-header">
+    <div class="header-top">
+      <div class="org-name">Trinity Church</div>
+      <button class="close-btn" onclick="toggleWidget()">✕</button>
+    </div>
+    <div class="org-icon-wrap">
+      <div class="org-icon">⛪</div>
+      <div class="org-info-text">
+        <div class="org-title">New Church Roof Campaign</div>
+        <div class="org-sub">Help us keep our doors open</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- White card (matches app white card) -->
+  <div class="widget-card">
+
+    <!-- Screen 1: Pick donation type (matches app screen 3) -->
+    <div class="screen active" id="screen-type">
+      <div class="screen-title">Easiest way to start giving</div>
+      <div class="screen-sub">Please select your donation type</div>
+
+      <div class="donation-card" onclick="goToAmount('roundup')">
+        <div class="card-left">
+          <div class="card-type">Round Up</div>
+          <div class="card-desc">Round up your change with ease</div>
+        </div>
+        <div class="card-illustration">🔄</div>
+      </div>
+
+      <div class="donation-card" onclick="goToAmount('monthly')">
+        <div class="card-left">
+          <div class="card-type">Regular</div>
+          <div class="card-desc">Make a lasting impact with regular donations</div>
+        </div>
+        <div class="card-illustration">🕐</div>
+      </div>
+
+      <div class="donation-card" onclick="goToAmount('onetime')">
+        <div class="card-left">
+          <div class="card-type">One-Off</div>
+          <div class="card-desc">Support us with a one-off donation</div>
+        </div>
+        <div class="card-illustration">💛</div>
+      </div>
+    </div>
+
+    <!-- Screen 2a: Round Up -->
+    <div class="screen" id="screen-roundup">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <div class="screen-title">Round Up</div>
+      <div class="screen-sub">We round up your purchases and donate the change</div>
+      <div class="roundup-box">
+        <div class="ru-label">Your last purchase</div>
+        <div class="ru-amounts">
+          <span id="ru-base">$12.43</span>
+          <span class="ru-arrow">→</span>
+          <span class="ru-donated" id="ru-rounded">$13.00</span>
+        </div>
+        <div class="ru-sub">+<span id="ru-diff">$0.57</span> goes to Trinity Church 🎉</div>
+      </div>
+      <div class="ru-slider-label">Simulate purchase: $<span id="ru-slider-val">12.43</span></div>
+      <input type="range" min="1" max="99.99" step="0.01" value="12.43" oninput="updateRoundup(this.value)">
+      <button class="cta-btn" onclick="showSuccess('Round Up')">
+        <span>💳</span> Enable Round-Ups
+      </button>
+    </div>
+
+    <!-- Screen 2b: Monthly / Regular -->
+    <div class="screen" id="screen-monthly">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <div class="screen-title">Regular Giving</div>
+      <div class="screen-sub">Choose your monthly amount</div>
+      <div class="monthly-tier" onclick="selectTier(this)">
+        <div>
+          <div class="tier-amount">$5<span style="font-size:12px;color:#999;font-weight:500">/mo</span></div>
+          <div class="tier-name">Supporter</div>
+        </div>
+        <div class="tier-badge">$60/year</div>
+      </div>
+      <div class="monthly-tier selected" onclick="selectTier(this)">
+        <div>
+          <div class="tier-amount">$10<span style="font-size:12px;color:#999;font-weight:500">/mo</span></div>
+          <div class="tier-name">Champion</div>
+        </div>
+        <div class="tier-badge">$120/year 🌟</div>
+      </div>
+      <div class="monthly-tier" onclick="selectTier(this)">
+        <div>
+          <div class="tier-amount">$25<span style="font-size:12px;color:#999;font-weight:500">/mo</span></div>
+          <div class="tier-name">Hero</div>
+        </div>
+        <div class="tier-badge">$300/year 🏆</div>
+      </div>
+      <br>
+      <button class="cta-btn" onclick="showSuccess('Regular')">
+        <span>📅</span> Start Monthly Giving
+      </button>
+    </div>
+
+    <!-- Screen 2c: One-Off -->
+    <div class="screen" id="screen-onetime">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <div class="screen-title">One-Off Donation</div>
+      <div class="screen-sub">Choose an amount to give today</div>
+      <div class="amount-grid">
+        <button class="amt-btn selected" onclick="selectAmt(this)">$5</button>
+        <button class="amt-btn" onclick="selectAmt(this)">$10</button>
+        <button class="amt-btn" onclick="selectAmt(this)">$25</button>
+        <button class="amt-btn" onclick="selectAmt(this)">$50</button>
+        <button class="amt-btn" onclick="selectAmt(this)">$100</button>
+        <button class="amt-btn" onclick="showCustom(this)">Other</button>
+      </div>
+      <div class="custom-wrap" id="custom-wrap" style="display:none">
+        <input type="number" placeholder="$ Enter amount" id="custom-val">
+      </div>
+      <button class="cta-btn" onclick="showSuccess('One-Off')">
+        <span>💛</span> Donate Now
+      </button>
+    </div>
+
+    <!-- Screen 3: Success -->
+    <div class="screen" id="screen-success">
+      <div class="success-wrap">
+        <div class="success-emoji">🎉</div>
+        <h3>Thank you!</h3>
+        <p>Your <span id="success-type"></span> gift to Trinity Church is making a real difference. You're a hero!</p>
+        <button class="success-again" onclick="goBack()">← Give Again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="widget-footer">
+    Powered by <strong>RAYZIT</strong> · Secure giving · Cancel anytime
+  </div>
+</div>
+
+<script>
+  let widgetOpen = false;
+  let currentDonationType = '';
+
+  function toggleWidget() {
+    widgetOpen = !widgetOpen;
+    document.getElementById('rayzit-widget').classList.toggle('open', widgetOpen);
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function goToAmount(type) {
+    currentDonationType = type;
+    showScreen('screen-' + type);
+  }
+
+  function goBack() {
+    showScreen('screen-type');
+  }
+
+  function updateRoundup(val) {
+    const base = parseFloat(val);
+    const rounded = Math.ceil(base);
+    const diff = (rounded - base).toFixed(2);
+    document.getElementById('ru-slider-val').textContent = base.toFixed(2);
+    document.getElementById('ru-base').textContent = '$' + base.toFixed(2);
+    document.getElementById('ru-rounded').textContent = '$' + rounded.toFixed(2);
+    document.getElementById('ru-diff').textContent = '$' + diff;
+  }
+
+  function selectAmt(btn) {
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('custom-wrap').style.display = 'none';
+  }
+
+  function showCustom(btn) {
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const w = document.getElementById('custom-wrap');
+    w.style.display = 'block';
+    document.getElementById('custom-val').focus();
+  }
+
+  function selectTier(el) {
+    document.querySelectorAll('.monthly-tier').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function showSuccess(type) {
+    document.getElementById('success-type').textContent = type.toLowerCase();
+    showScreen('screen-success');
+  }
+</script>
+</body>
+</html>
