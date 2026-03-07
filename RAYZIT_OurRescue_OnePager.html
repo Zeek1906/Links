@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT × Our Rescue — Platform Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D2137;
+    --blue: #1A5276;
+    --accent: #1F8EF1;
+    --gold: #E8A020;
+    --light: #F4F8FD;
+    --mid: #D6EAF8;
+    --white: #FFFFFF;
+    --text: #1A1A2E;
+    --muted: #6B7A99;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    padding: 36px 48px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(31,142,241,0.12);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: 120px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(232,160,32,0.08);
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--white);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .logo span {
+    color: var(--gold);
+  }
+  .tagline-block {
+    text-align: right;
+  }
+  .tagline-block .label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .tagline-block .org {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+  }
+  .header-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--white);
+    line-height: 1.25;
+    max-width: 560px;
+  }
+  .header-headline em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* MAIN */
+  .main {
+    padding: 0 48px 36px;
+  }
+
+  /* STATS STRIP */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin: 0 -48px 32px;
+    background: var(--accent);
+  }
+  .stat {
+    padding: 18px 24px;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+  }
+
+  /* TWO COLUMN BODY */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 28px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .section-body {
+    font-size: 12.5px;
+    color: #3A4A5C;
+    line-height: 1.65;
+  }
+
+  /* PROBLEM COLUMN */
+  .problem-col { padding-top: 28px; }
+
+  .pain-list {
+    list-style: none;
+    margin-top: 12px;
+  }
+  .pain-list li {
+    padding: 9px 12px 9px 32px;
+    margin-bottom: 6px;
+    background: var(--light);
+    border-left: 3px solid var(--gold);
+    font-size: 12px;
+    color: var(--text);
+    position: relative;
+    border-radius: 0 4px 4px 0;
+  }
+  .pain-list li::before {
+    content: '→';
+    position: absolute;
+    left: 10px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* SOLUTION COLUMN */
+  .solution-col {
+    background: var(--navy);
+    padding: 24px 28px;
+    border-radius: 6px;
+    margin-top: 0;
+  }
+  .solution-col .section-label { color: var(--gold); }
+  .solution-col .section-title { color: var(--white); }
+  .solution-col .section-body { color: rgba(255,255,255,0.75); }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 12px;
+  }
+  .feature-card .fc-icon {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .feature-card .fc-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 3px;
+  }
+  .feature-card .fc-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.45;
+  }
+
+  /* PILOT SECTION */
+  .pilot-section {
+    background: linear-gradient(135deg, #EAF4FE 0%, #F0F7FF 100%);
+    border: 1px solid var(--mid);
+    border-radius: 6px;
+    padding: 24px 32px;
+    margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+  .pilot-section .section-label { color: var(--blue); }
+  .pilot-section .section-title { color: var(--navy); }
+  .pilot-steps {
+    display: flex;
+    gap: 0;
+    margin-top: 14px;
+  }
+  .pilot-step {
+    flex: 1;
+    text-align: center;
+    padding: 0 8px;
+    position: relative;
+  }
+  .pilot-step + .pilot-step::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 16px;
+    width: 1px; height: 20px;
+    background: var(--mid);
+  }
+  .step-day {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .step-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+  .step-desc {
+    font-size: 10.5px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .pilot-cta {
+    text-align: center;
+    min-width: 160px;
+  }
+  .pilot-cta .big-stat {
+    font-family: 'DM Serif Display', serif;
+    font-size: 44px;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .pilot-cta .big-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  .pilot-cta .big-sub {
+    font-size: 10.5px;
+    color: var(--accent);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* OUTCOMES ROW */
+  .outcomes-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .outcome-card {
+    border: 1px solid var(--mid);
+    border-radius: 6px;
+    padding: 16px 18px;
+    border-top: 3px solid var(--accent);
+  }
+  .outcome-card .oc-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .outcome-card .oc-body {
+    font-size: 11.5px;
+    color: #4A5A6E;
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    background: var(--navy);
+    margin: 0 -48px -36px;
+    padding: 18px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--white);
+  }
+  .footer-brand span { color: var(--gold); }
+  .footer-contact {
+    text-align: right;
+  }
+  .footer-contact p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+  .footer-contact strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+  .footer-tag {
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  @media print {
+    body { width: 8.5in; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">RAY<span>ZIT</span></div>
+    <div class="tagline-block">
+      <div class="label">Prepared For</div>
+      <div class="org">Teresa, VP — Our Rescue</div>
+    </div>
+  </div>
+  <div class="header-headline">
+    Helping mission-driven organizations <em>unlock more giving</em> from the donors they already have.
+  </div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat">
+    <div class="stat-num">50K+</div>
+    <div class="stat-label">Your Active Donors</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">100</div>
+    <div class="stat-label">Church Partners</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">5,000</div>
+    <div class="stat-label">Corporate Donors</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">7 Days</div>
+    <div class="stat-label">To See Results</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- BODY GRID -->
+  <div class="body-grid">
+
+    <!-- LEFT: PROBLEM -->
+    <div class="problem-col">
+      <div class="section-label">The Challenge</div>
+      <div class="section-title">Large donor bases. Untapped giving potential.</div>
+      <div class="section-body">
+        Organizations like Our Rescue have built extraordinary donor communities — but most platforms are built to process transactions, not grow relationships. The result: donors give once, give less than they could, and drift away.
+      </div>
+      <ul class="pain-list">
+        <li>High donor acquisition cost with flat retention rates</li>
+        <li>Church and corporate partners underactivated in campaigns</li>
+        <li>Limited visibility into donor behavior between transactions</li>
+        <li>No network effect — donors give in silos, not communities</li>
+        <li>Campaign lift dependent on email open rates alone</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT: SOLUTION -->
+    <div class="solution-col">
+      <div class="section-label">The RAYZIT Platform</div>
+      <div class="section-title">Digital giving infrastructure built for community.</div>
+      <div class="section-body">
+        RAYZIT is a fintech giving platform that turns individual donors into giving networks — combining frictionless digital giving with campaign tools designed to mobilize your entire ecosystem at once.
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="fc-icon">⚡</div>
+          <div class="fc-title">Embeddable Widget</div>
+          <div class="fc-desc">Drop giving directly into your website, emails, or partner pages.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📊</div>
+          <div class="fc-title">Campaign Tracker</div>
+          <div class="fc-desc">Real-time goal tracking that drives urgency and donor momentum.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🤝</div>
+          <div class="fc-title">Network Giving</div>
+          <div class="fc-desc">Donors invite their communities — your reach multiplies organically.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📩</div>
+          <div class="fc-title">Automated Receipts</div>
+          <div class="fc-desc">Instant, branded donation confirmations — no manual follow-up.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PILOT SECTION -->
+  <div class="pilot-section">
+    <div>
+      <div class="section-label">Getting Started</div>
+      <div class="section-title">The 7-Day Donor Adoption Campaign</div>
+      <div class="section-body" style="max-width:440px;">
+        We don't ask for a long-term commitment up front. RAYZIT's onboarding model is built around a focused 7-day pilot campaign — designed around a cause or initiative you're already running — so you see real results before any major decisions.
+      </div>
+      <div class="pilot-steps">
+        <div class="pilot-step">
+          <div class="step-day">D1–2</div>
+          <div class="step-label">Setup</div>
+          <div class="step-desc">Platform config & campaign build</div>
+        </div>
+        <div class="pilot-step">
+          <div class="step-day">D3</div>
+          <div class="step-label">Launch</div>
+          <div class="step-desc">Activate to target donor segment</div>
+        </div>
+        <div class="pilot-step">
+          <div class="step-day">D4–6</div>
+          <div class="step-label">Drive</div>
+          <div class="step-desc">Mobilize church & corporate partners</div>
+        </div>
+        <div class="pilot-step">
+          <div class="step-day">D7</div>
+          <div class="step-label">Report</div>
+          <div class="step-desc">Full performance readout & next steps</div>
+        </div>
+      </div>
+    </div>
+    <div class="pilot-cta">
+      <div class="big-stat">Low</div>
+      <div class="big-label">Risk Entry</div>
+      <div class="big-sub">Proof of value in one week</div>
+    </div>
+  </div>
+
+  <!-- OUTCOMES -->
+  <div class="outcomes-row">
+    <div class="outcome-card">
+      <div class="oc-title">Increase Average Gift Size</div>
+      <div class="oc-body">Campaign tracker visibility and community momentum consistently drives donors to give more per transaction.</div>
+    </div>
+    <div class="outcome-card">
+      <div class="oc-title">Activate Dormant Donors</div>
+      <div class="oc-body">RAYZIT's network giving model re-engages lapsed donors through peer invitations — not just another email blast.</div>
+    </div>
+    <div class="outcome-card">
+      <div class="oc-title">Mobilize Your Partners</div>
+      <div class="oc-body">Give your 100 church and 5,000 corporate partners their own giving touchpoints — multiplying campaign reach overnight.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div>
+      <div class="footer-brand">RAY<span>ZIT</span></div>
+      <div class="footer-tag">Digital Giving Platform</div>
+    </div>
+    <div class="footer-contact">
+      <p><strong>Fred</strong> — CEO, RAYZIT</p>
+      <p>rayzit.com &nbsp;|&nbsp; contact@rayzit.com</p>
+      <p style="margin-top:4px; color: rgba(255,255,255,0.4); font-size:10px;">Prepared for Our Rescue — Confidential</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
