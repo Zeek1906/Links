@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeep 2026 Walkaround Field Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; padding: 16px; max-width: 680px; margin: 0 auto; }
+
+  /* Header */
+  .app-header { background: #1a1a1a; color: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; }
+  .app-header h1 { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
+  .app-header p { font-size: 12px; color: #aaa; }
+
+  /* Vehicle tabs */
+  .vehicle-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+  .tab-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1.5px solid #ddd; background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; color: #555; transition: all 0.15s; }
+  .tab-btn.active { color: #fff; border-color: transparent; }
+  .tab-btn.cherokee.active { background: #993C1D; }
+  .tab-btn.gc.active { background: #185FA5; }
+  .tab-btn.gw.active { background: #854F0B; }
+
+  /* Vehicle panels */
+  .vehicle-panel { display: none; }
+  .vehicle-panel.active { display: block; }
+
+  /* Panel header */
+  .panel-header { border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+  .panel-header.cherokee { background: #FAECE7; border-left: 4px solid #993C1D; }
+  .panel-header.gc { background: #E6F1FB; border-left: 4px solid #185FA5; }
+  .panel-header.gw { background: #FAEEDA; border-left: 4px solid #854F0B; }
+  .panel-header .badge { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .panel-header.cherokee .badge { color: #993C1D; }
+  .panel-header.gc .badge { color: #0C447C; }
+  .panel-header.gw .badge { color: #633806; }
+  .panel-header h2 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .panel-header p { font-size: 12px; color: #666; }
+
+  /* Stop cards */
+  .stop-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .stop-card.featured.cherokee { border: 2px solid #D85A30; }
+  .stop-card.featured.gc { border: 2px solid #185FA5; }
+  .stop-card.featured.gw { border: 2px solid #BA7517; }
+
+  .stop-header { display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .stop-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .cherokee .stop-num { background: #FAECE7; color: #993C1D; }
+  .gc .stop-num { background: #E6F1FB; color: #0C447C; }
+  .gw .stop-num { background: #FAEEDA; color: #633806; }
+
+  .stop-info { flex: 1; min-width: 0; }
+  .stop-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  .stop-loc { font-size: 11px; color: #888; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chevron { font-size: 11px; color: #aaa; transition: transform 0.2s; flex-shrink: 0; }
+  .chevron.open { transform: rotate(180deg); }
+
+  .stop-body { display: none; padding: 0 14px 14px; border-top: 1px solid #f0f0f0; }
+  .stop-body.open { display: block; }
+
+  .point-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin: 14px 0 5px; }
+  .cherokee .point-label { color: #993C1D; }
+  .gc .point-label { color: #0C447C; }
+  .gw .point-label { color: #633806; }
+
+  .point-script { font-size: 13.5px; line-height: 1.65; color: #222; margin-bottom: 4px; }
+
+  .sowhat { margin-top: 14px; padding: 10px 12px; border-radius: 0 8px 8px 0; background: #f8f8f6; }
+  .cherokee .sowhat { border-left: 3px solid #D85A30; }
+  .gc .sowhat { border-left: 3px solid #185FA5; }
+  .gw .sowhat { border-left: 3px solid #BA7517; }
+  .sowhat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px; }
+  .cherokee .sowhat-label { color: #993C1D; }
+  .gc .sowhat-label { color: #0C447C; }
+  .gw .sowhat-label { color: #633806; }
+  .sowhat-text { font-size: 13px; color: #333; line-height: 1.5; }
+
+  .objection { margin-top: 10px; background: #fafafa; border: 1px solid #e8e8e8; border-radius: 8px; padding: 10px 12px; }
+  .obj-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+  .obj-q { font-size: 13px; color: #666; font-style: italic; margin-bottom: 6px; line-height: 1.5; }
+  .obj-a { font-size: 13px; color: #222; line-height: 1.55; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .pill { font-size: 11px; background: #f2f2f0; border: 1px solid #e0e0dc; border-radius: 20px; padding: 3px 9px; color: #555; }
+
+  .value-banner { margin-top: 12px; background: #FAEEDA; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+  .vb-num { font-size: 24px; font-weight: 700; color: #633806; flex-shrink: 0; }
+  .vb-text { font-size: 12.5px; color: #633806; line-height: 1.4; }
+
+  /* Footer */
+  .footer { text-align: center; font-size: 11px; color: #aaa; margin-top: 24px; padding-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>Jeep 2026 — Walkaround Field Guide</h1>
+  <p>Spring Training Tour | Stellantis Performance Institute</p>
+</div>
+
+<div class="vehicle-tabs">
+  <button class="tab-btn cherokee active" onclick="switchTab('cherokee')">Cherokee</button>
+  <button class="tab-btn gc" onclick="switchTab('gc')">Grand Cherokee</button>
+  <button class="tab-btn gw" onclick="switchTab('gw')">Grand Wagoneer</button>
+</div>
+
+<!-- ===================== CHEROKEE ===================== -->
+<div class="vehicle-panel cherokee active" id="panel-cherokee">
+  <div class="panel-header cherokee">
+    <div class="badge">Field Guide — Primary Vehicle</div>
+    <h2>2026 Jeep Cherokee (6th Gen)</h2>
+    <p>Mixed audience: sales consultants + managers</p>
+  </div>
+
+  <div class="stop-card cherokee">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">1</div>
+      <div class="stop-info"><div class="stop-name">Front Fascia</div><div class="stop-loc">Standing at the front of the vehicle</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Heritage Hook</div>
+      <p class="point-script">"The first thing you'll notice is that Jeep went back to its roots. That upright boxy stance, the trapezoidal wheel arches — those are direct callbacks to the 1984 XJ Cherokee. They didn't just bring back a name, they brought back the DNA."</p>
+      <div class="point-label">Seven-Slot Signature</div>
+      <p class="point-script">"The seven-slot grille is gloss black on this trim with integrated silver Jeep branding. And that small nozzle you see on the grille — that's a front camera washer, exclusive to the Overland. It keeps your 360-degree view clean even on a trail."</p>
+      <div class="point-label">U-Shaped DRLs</div>
+      <p class="point-script">"Those U-shaped LED daytime running lights are the new signature. You're going to recognize a Cherokee from a block away. Full LED reflector headlamps, integrated fog lights — this is production premium, not a concept trim."</p>
+      <div class="sowhat cherokee"><div class="sowhat-label">So What</div><div class="sowhat-text">Design story sells emotion before a single spec lands. The XJ callback gives enthusiasts a reason and family buyers an identity. Let this stop do the feeling work.</div></div>
+      <div class="pills"><span class="pill">8" ground clearance</span><span class="pill">188.1" overall length</span><span class="pill">74.7" width</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card cherokee">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">2</div>
+      <div class="stop-info"><div class="stop-name">Hood / Engine Bay</div><div class="stop-loc">Hood open, standing driver's side</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">The Engine Story</div>
+      <p class="point-script">"Under the hood is a 1.6-liter turbocharged hybrid — and before anybody says 'that sounds small for a Jeep,' let me reframe that. This is a third-generation EP6 engine originally developed in Europe, with millions of miles of proven reliability already baked in. It's not a new experiment. It's a localized upgrade."</p>
+      <div class="point-label">Power Numbers</div>
+      <p class="point-script">"Combined output is 210 horsepower and 230 lb-ft of torque. That torque number matters more than horsepower for everyday driving — it's what you feel when you merge or accelerate from a light. And with the electric motors eliminating turbo lag, that torque hits immediately."</p>
+      <div class="point-label">Liquid-Cooled Battery</div>
+      <p class="point-script">"One thing worth pointing out — the 1.03 kWh battery is liquid cooled. A lot of competitors are still running air-cooled systems. Liquid cooling means consistent performance in summer heat or hard driving, and longer battery longevity over time."</p>
+      <div class="point-label">Electronic Hood Release</div>
+      <p class="point-script">"Quick UX note: the hood release is electronic, triggered from a dash button. There's a manual pull tab under the dash as a backup. Clean, modern, and it matches the flush-handle philosophy you'll see on the doors."</p>
+      <div class="sowhat cherokee"><div class="sowhat-label">So What</div><div class="sowhat-text">Preempt the "small engine" objection here before they bring it up at the desk. Third-gen, proven lineage, liquid cooled — those three points close the anxiety loop early.</div></div>
+      <div class="pills"><span class="pill">210 HP combined</span><span class="pill">230 lb-ft torque</span><span class="pill">37 MPG combined</span><span class="pill">500+ mile range</span><span class="pill">87 octane regular</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card cherokee">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">3</div>
+      <div class="stop-info"><div class="stop-name">Driver's Side Profile</div><div class="stop-loc">Standing mid-vehicle, driver's side</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Size Story</div>
+      <p class="point-script">"Step back and look at the profile. This Cherokee is 188 inches long, about 6 inches longer than a RAV4. That extra length isn't just visual — it all went into the wheelbase, which is 113 inches. That's the number that creates rear legroom. You'll feel that when we get inside."</p>
+      <div class="point-label">E-Latch Handles</div>
+      <p class="point-script">"Notice the door handles — flush, no physical pull. These are electronic e-latches with a touchpad release. Cleaner aerodynamically, more premium feel. Training note: front doors have a manual override lever just ahead of the handle. Rear doors are fully electronic — easiest frame for families is that it's a built-in child-lock system."</p>
+      <div class="point-label">Overland Wheels + Body Color</div>
+      <p class="point-script">"On the Overland you're getting 20-inch two-tone machine-finished alloy wheels, and notice the lower moldings and wheel arch flares are body-color — not matte plastic like you'd see on base trims. That's the detail that separates this truck visually from 40 feet away."</p>
+      <div class="sowhat cherokee"><div class="sowhat-label">So What</div><div class="sowhat-text">This is your size conquest stop. RAV4 and CR-V buyers need to see the size difference before they sit in it. Call the wheelbase number out loud — 113 inches sticks.</div></div>
+      <div class="pills"><span class="pill">113" wheelbase</span><span class="pill">20" Overland wheels</span><span class="pill">Raised roof rails std.</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card cherokee">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">4</div>
+      <div class="stop-info"><div class="stop-name">Rear / Cargo</div><div class="stop-loc">Standing at the rear, liftgate open</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Jerry Can Taillights</div>
+      <p class="point-script">"Before we open the liftgate — look at the taillight signature. That quadrant LED pattern is inspired by vintage military jerry cans. It's a heritage Easter egg for the Jeep enthusiast, but it also functions as a high-visibility LED array. Small detail, big identity."</p>
+      <div class="point-label">Hands-Free Liftgate</div>
+      <p class="point-script">"The powered liftgate has a hands-free kick sensor — when your hands are full you just kick under the bumper and it opens. When it closes, you get a 3-second beep delay so nobody's standing too close. That 3-second delay is worth mentioning when customers ask about safety with kids around."</p>
+      <div class="point-label">Cargo + Full-Size Spare</div>
+      <p class="point-script">"33.6 cubic feet with seats up, 68 cubic feet flat — that's a 30 percent increase over the last generation. And here's the detail that beats most hybrids: there's a full-size spare tire hidden under a completely flat load floor. Most hybrid competitors sacrifice the spare for battery packaging. We didn't."</p>
+      <div class="point-label">Towing</div>
+      <p class="point-script">"Standard tow rating is 3,500 lbs — best in the compact hybrid segment. On the Overland with the Max Tow Package, that goes to 4,500 lbs. For context, the RAV4 Hybrid tops out around 1,750. We're more than doubling the segment average."</p>
+      <div class="sowhat cherokee"><div class="sowhat-label">So What</div><div class="sowhat-text">Full-size spare plus best-in-class towing is a one-two punch no hybrid competitor can match. This stop wins the utility argument. Don't rush it.</div></div>
+      <div class="pills"><span class="pill">33.6 cu ft seats up</span><span class="pill">68 cu ft seats down</span><span class="pill">3,500 lb tow std.</span><span class="pill">4,500 lb w/ Tow Pkg</span><span class="pill">Full-size spare</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card cherokee">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">5</div>
+      <div class="stop-info"><div class="stop-name">Rear Seat</div><div class="stop-loc">Rear passenger door open, customer seated</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Adult-Sized Rear Legroom</div>
+      <p class="point-script">"Go ahead and sit back. Notice the legroom. You're looking at 41.3 inches of rear legroom — that's a 6-foot adult sitting comfortably behind another 6-foot driver. The previous generation couldn't do that. That extra 6.5 inches of wheelbase all came here."</p>
+      <div class="point-label">Capri Leatherette + Stitching</div>
+      <p class="point-script">"The material on the Overland is Capri faux leather with honeycomb perforations and bronze contrast stitching. It's durable, it wipes clean, and frankly it's getting hard to tell from real leather unless someone tells you. Jeep made the call for sustainability and durability — it's the right one for families."</p>
+      <div class="point-label">Atmosphere</div>
+      <p class="point-script">"Notice how open the cabin feels. Jeep removed about 30 percent of dashboard clutter from the previous generation with a horizontal layout. Higher trims get the panoramic sunroof overhead — that doubles the open feel."</p>
+      <div class="sowhat cherokee"><div class="sowhat-label">So What</div><div class="sowhat-text">Put the customer in the seat. They need to feel 41.3 inches, not hear it. This is the stop where the size story becomes personal. Let them sit for a moment.</div></div>
+      <div class="pills"><span class="pill">41.3" rear legroom</span><span class="pill">Capri faux leather</span><span class="pill">Pano sunroof (Overland)</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card cherokee">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">6</div>
+      <div class="stop-info"><div class="stop-name">Driver's Seat / Tech Stack</div><div class="stop-loc">Customer in driver's seat</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Octagonal Steering Wheel</div>
+      <p class="point-script">"First thing you'll feel is the steering wheel — that stop-sign octagonal shape is intentional. The flat top and flat bottom give you a clear line of sight straight into the 10.25-inch digital cluster. No wheel blocking your speed or nav at the top of the gauge. It's thicker than most too — closer to a performance car feel than a typical SUV."</p>
+      <div class="point-label">Uconnect 5 — 12.3 Inch</div>
+      <p class="point-script">"The 12.3-inch Uconnect 5 screen has wireless Apple CarPlay and Android Auto, Alexa built in, and over-the-air update capability. Important detail: notice the physical hard buttons for defrost and AC. Jeep brought those back because they listened — nobody wants to hunt through a touchscreen menu to defrost a windshield."</p>
+      <div class="point-label">Digital Rearview Mirror</div>
+      <p class="point-script">"That mirror isn't a regular mirror. It's a display fed by a camera in the third brake light on the exterior. Load up the cargo area completely and you still have a perfect unobstructed rear view. It's also a wider field of view than any glass mirror in this class."</p>
+      <div class="point-label">ADAS — Level 2 Standard</div>
+      <p class="point-script">"Active Driving Assist is standard across all trims — not a package, not an upgrade. That's adaptive cruise control combined with lane centering. Hands-on, eyes-on — but it handles the micro-corrections on highway commutes. On a RAV4 you're often paying extra for this. Here it comes on every Cherokee off the truck."</p>
+      <div class="point-label">Rotary Shifter + Wireless Charging</div>
+      <p class="point-script">"Real metal rotary gear selector on the console — that's a tactile premium touch. Wireless charging pad has pressure tongs built in to keep the phone from sliding. Small thing, but it matters when you're navigating and you need your phone to stay put."</p>
+      <div class="sowhat cherokee"><div class="sowhat-label">So What</div><div class="sowhat-text">This is your close stop. Level 2 standard, 12.3-inch screen, digital mirror, physical HVAC buttons — the tech story is premium without the premium price. Land the value equation here before you walk to the desk.</div></div>
+      <div class="pills"><span class="pill">12.3" Uconnect 5</span><span class="pill">10.25" digital cluster</span><span class="pill">Level 2 ADAS std.</span><span class="pill">9-speaker Alpine (OVL)</span><span class="pill">360 surround view (OVL)</span><span class="pill">Wireless CarPlay/AA</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== GRAND CHEROKEE ===================== -->
+<div class="vehicle-panel gc" id="panel-gc">
+  <div class="panel-header gc">
+    <div class="badge">Field Guide — Backup Vehicle 1</div>
+    <h2>2026 Jeep Grand Cherokee (Refresh)</h2>
+    <p>Mixed audience: sales consultants + managers</p>
+  </div>
+
+  <div class="stop-card gc featured">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">1</div>
+      <div class="stop-info"><div class="stop-name">Front Fascia</div><div class="stop-loc">Standing at the front of the vehicle</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">The Facelift Story</div>
+      <p class="point-script">"The 2026 Grand Cherokee is a mid-cycle refresh — and the biggest change isn't what you see, it's what's under the hood. But visually, Jeep made intentional moves. The seven-slot grille has been reworked, the headlamps are new, and the front fascia is sharper and more chiseled. Jeep is pivoting toward a Range Rover-type premium aesthetic — less chrome, more confidence."</p>
+      <div class="point-label">Chrome Is Gone</div>
+      <p class="point-script">"Notice there's no traditional chrome trim running across this front end. On the Limited and Summit, you're getting Silver Silk or blacked-out accents depending on the package. On the Summit Obsidian — everything is blacked out. It's a deliberate move upmarket. Three new colors for 2026: Steel Blue, Copper Shino, and Fathom Blue."</p>
+      <div class="point-label">Still Unmistakably Grand Cherokee</div>
+      <p class="point-script">"What Jeep didn't change is the stance. This is still the most awarded SUV in American history. The proportions, the commanding height, the presence — that's intact. The refresh is about refinement, not reinvention."</p>
+      <div class="sowhat gc"><div class="sowhat-label">So What</div><div class="sowhat-text">Start with the look to set the premium tone early. The chrome-to-sophisticated-accents story positions this above domestic competitors before you ever get to specs.</div></div>
+    </div>
+  </div>
+
+  <div class="stop-card gc featured">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">2</div>
+      <div class="stop-info"><div class="stop-name">Hood / Hurricane 4 Engine</div><div class="stop-loc">Hood open — CENTERPIECE STOP</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Reframe Before You Start</div>
+      <p class="point-script">"Before I tell you about this engine, I want to address the elephant in the room — because somebody is going to bring it up. Yes, the V8 is gone. Yes, this is a 2.0-liter four-cylinder. And yes, it makes more power than the V6 it replaced, more torque than the old Hemi at usable RPMs, and it runs on regular 87-octane. Let me show you why."</p>
+      <div class="point-label">The Numbers First</div>
+      <p class="point-script">"The Hurricane 4 produces 324 horsepower and 332 lb-ft of torque. The 3.6-liter Pentastar V6 it replaces made 290 horsepower and 260 lb-ft. That's 34 more horsepower and 72 more pound-feet of torque out of an engine that's almost half the displacement. Towing capacity? Still 6,200 lbs — identical to the V6."</p>
+      <div class="point-label">Power Density — The Real Story</div>
+      <p class="point-script">"This engine produces 162 horsepower per liter — 26% more power density than a Hellcat Redeye V8. It's not about displacement anymore. It's about how efficiently you burn fuel. This is the same principle Formula 1 engineers use, now in a family SUV."</p>
+      <div class="point-label">TJI — The Blowtorch Effect</div>
+      <p class="point-script">"The secret is Turbulent Jet Ignition — TJI. Standard engines use one spark plug to start a slow flame front across the cylinder. The Hurricane 4 uses a tiny pre-chamber above each cylinder. When it ignites, it shoots high-energy jets of flame into the main chamber from eight different angles simultaneously — like a blowtorch instead of a match. Faster burn, cleaner combustion, more power from every drop of fuel. This was previously only found in Formula 1 cars and the Maserati Nettuno V6. Now it's in a family SUV at this dealership."</p>
+      <div class="point-label">Torque Curve — The Driving Feel</div>
+      <p class="point-script">"90 percent of peak torque available from 2,600 RPM all the way to 5,600 RPM. You're not waiting for the engine to wake up. The moment you press the accelerator to merge or pass, the response is instant."</p>
+      <div class="point-label">Built to Last</div>
+      <p class="point-script">"Cylinder walls are 24% thicker than previous 2.0-liter designs. The bore lining is aerospace-grade PTWA coating — steel alloy melted at over 4,000 degrees and sprayed onto the cylinder walls — ten times more wear-resistant than traditional iron. Electric water pump continues to circulate coolant after shutdown to protect the turbo bearings. Jeep ran this engine at wide-open throttle for hundreds of hours before production."</p>
+      <div class="sowhat gc"><div class="sowhat-label">So What</div><div class="sowhat-text">Don't rush this stop. The Hurricane 4 is the biggest story of this refresh. Give TJI a full 60 seconds. If they understand the blowtorch analogy, the "small engine" objection is gone before the desk.</div></div>
+      <div class="objection"><div class="obj-label">Handle at this stop</div><div class="obj-q">"A 4-cylinder in a 5,000-pound Jeep — I don't know about that."</div><div class="obj-a">"Totally fair reaction. 162 horsepower per liter — that's more power density than a Hellcat V8. It's not a small engine trying to keep up; it's a precision engine that outpunches the V6 it replaced at every point in the rev range. Jeep expects this engine to be 60-65% of all Grand Cherokee sales. That's not niche — it's the new standard."</div></div>
+      <div class="pills"><span class="pill">324 HP</span><span class="pill">332 lb-ft torque</span><span class="pill">162 HP/liter</span><span class="pill">6,200 lb towing</span><span class="pill">529-mile range</span><span class="pill">87 octane regular</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gc">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">3</div>
+      <div class="stop-info"><div class="stop-name">Driver's Side Profile</div><div class="stop-loc">Standing mid-vehicle, driver's side</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Stance and Presence</div>
+      <p class="point-script">"This is still a Grand Cherokee — commanding, tall, planted. What changed are the details: new headlamp design, updated lower fascia, and depending on the trim, wheels up to 20 inches with black or chrome finishes."</p>
+      <div class="point-label">Trim Differentiation</div>
+      <p class="point-script">"The lineup for 2026 is simplified — Laredo, Limited, and Summit. Clean decision path. Laredo Altitude: Selec-Terrain 4x4 is now standard — new for 2026. Limited Reserve steps up to 20-inch black wheels and Nappa leather. Summit is full luxury — air suspension, McIntosh audio, massaging seats."</p>
+      <div class="point-label">Grand Cherokee L Option</div>
+      <p class="point-script">"If your customer has a larger family, worth mentioning the Grand Cherokee L — same powertrain, adds a third row. Laredo Altitude and above on the L now get USB charging in the third row for 2026."</p>
+      <div class="sowhat gc"><div class="sowhat-label">So What</div><div class="sowhat-text">Use this stop to qualify trim. Ask the family size question here. Two-row or three-row decision shapes everything downstream.</div></div>
+      <div class="pills"><span class="pill">3 core trims</span><span class="pill">Selec-Terrain std. (Laredo Alt.)</span><span class="pill">GC L available</span><span class="pill">20" wheels (Ltd. Reserve+)</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gc">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">4</div>
+      <div class="stop-info"><div class="stop-name">Rear / Cargo</div><div class="stop-loc">Standing at the rear, liftgate open</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Capability Story</div>
+      <p class="point-script">"6,200 pounds of towing — same as the V6 it replaced. Boat, camper, trailer — the Grand Cherokee didn't give anything up when it made the powertrain switch. The Hurricane 4's flat torque curve actually makes it a better tow vehicle because the power is more accessible and consistent under load."</p>
+      <div class="point-label">Cargo Space</div>
+      <p class="point-script">"Two-row cargo is up to 71 cubic feet seats flat. On the Grand Cherokee L with three rows, up to 85 cubic feet. Compare that to the new Cherokee at 68 — if space is the primary driver, this is the vehicle."</p>
+      <div class="point-label">Range Before Refuel</div>
+      <p class="point-script">"Estimated range on the Hurricane 4 is 529 miles on a single tank — best in class for this segment. On a road trip you're looking at one fewer stop than most competitors."</p>
+      <div class="sowhat gc"><div class="sowhat-label">So What</div><div class="sowhat-text">If they came from a truck or larger SUV, towing parity is your retention point. If they're moving up from a car, the 529-mile range eliminates the efficiency objection before it starts.</div></div>
+      <div class="pills"><span class="pill">6,200 lb towing</span><span class="pill">71 cu ft (2-row)</span><span class="pill">85 cu ft (L, 3-row)</span><span class="pill">529-mile range</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gc">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">5</div>
+      <div class="stop-info"><div class="stop-name">Rear Seat</div><div class="stop-loc">Rear passenger door open, customer seated</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Comfort and Materials</div>
+      <p class="point-script">"The Grand Cherokee is the premium play in the Jeep lineup and that's still true here. Leatherette on entry trims, Nappa leather on the Limited Reserve, Palermo leather on the Summit. The Summit adds a suede headliner overhead — it's a detail that reads luxury the moment you get in."</p>
+      <div class="point-label">Second Row Tech</div>
+      <p class="point-script">"On mid-to-upper trims, heated second-row seats are standard. Limited Reserve and above: available 10.25-inch passenger display up front — the co-pilot screen — so the front passenger can control navigation or entertainment independently."</p>
+      <div class="point-label">Trailhawk / 4xe Option</div>
+      <p class="point-script">"If the customer mentions off-road use, introduce the Trailhawk. That's the 4xe plug-in hybrid — 375 horsepower, 470 lb-ft of torque, best departure angles in the GC lineup. Different conversation, but worth flagging if capability is a priority."</p>
+      <div class="sowhat gc"><div class="sowhat-label">So What</div><div class="sowhat-text">Seat the customer. Premium materials sell themselves when experienced. Introduce the Trailhawk here if any off-road language has come up — don't wait until the desk for that fork.</div></div>
+      <div class="pills"><span class="pill">Nappa leather (Ltd. Reserve)</span><span class="pill">Palermo + suede (Summit)</span><span class="pill">Heated 2nd row (Ltd+)</span><span class="pill">Trailhawk 4xe: 470 lb-ft</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gc">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">6</div>
+      <div class="stop-info"><div class="stop-name">Driver's Seat / Tech Stack</div><div class="stop-loc">Customer in driver's seat</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">12.3-Inch Uconnect — Now Standard</div>
+      <p class="point-script">"The biggest interior news for 2026: the 12.3-inch touchscreen is now standard on Laredo Altitude and above. Previously an upgrade. Wireless Apple CarPlay and Android Auto, over-the-air updates, Alexa built in."</p>
+      <div class="point-label">Relocated Start Button</div>
+      <p class="point-script">"The start button has been moved to a more prominent position on the dashboard for 2026. That freed up console space and improves overall dashboard ergonomics."</p>
+      <div class="point-label">Summit Tech — McIntosh + Massaging Seats</div>
+      <p class="point-script">"On the Summit: 19-speaker McIntosh audio system, massaging seats standard for driver and front passenger, Oak and Liquid Chrome interior accents, Quadra-Lift air suspension. At this trim you're competing with Range Rover and Lincoln — and winning on value."</p>
+      <div class="point-label">Active Driving Assist — Standard</div>
+      <p class="point-script">"Level 2 highway assistance — standard on Laredo Altitude and above. Adaptive cruise plus lane centering. Intersection Collision Assist and Traffic Sign Recognition are also now standard at Laredo Altitude — those were premium features before."</p>
+      <div class="sowhat gc"><div class="sowhat-label">So What</div><div class="sowhat-text">Close on value density. Laredo Altitude gets Selec-Terrain 4x4, Hurricane engine, 12.3" screen, Level 2 ADAS, and new safety tech — all standard. Set that expectation before walking to the desk.</div></div>
+      <div class="objection"><div class="obj-label">Handle at this stop</div><div class="obj-q">"What about long-term reliability on that engine?"</div><div class="obj-a">"Stellantis ran this engine at wide-open throttle for hundreds of hours — desert heat and freezing cold — before production. Cylinder walls are aerospace-grade coated, 24% thicker than the previous 2.0-liter. There's an electric cooling pump that runs after shutdown to protect the turbo. Standard warranty coverage. This isn't a rushed powertrain — it's a multi-year engineering investment."</div></div>
+      <div class="pills"><span class="pill">12.3" Uconnect std. (Laredo Alt.+)</span><span class="pill">Level 2 ADAS std.</span><span class="pill">19-speaker McIntosh (Summit)</span><span class="pill">Massaging seats (Summit)</span><span class="pill">Air suspension (Summit)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== GRAND WAGONEER ===================== -->
+<div class="vehicle-panel gw" id="panel-gw">
+  <div class="panel-header gw">
+    <div class="badge">Field Guide — Backup Vehicle 2</div>
+    <h2>2026 Jeep Grand Wagoneer</h2>
+    <p>Mixed audience: sales consultants + managers</p>
+  </div>
+
+  <div class="stop-card gw featured">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">1</div>
+      <div class="stop-info"><div class="stop-name">Front Fascia — Open With the Price Story</div><div class="stop-loc">Standing at the front — SET THE FRAME HERE</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Lead With the Value Disruption</div>
+      <p class="point-script">"Before we even walk around this vehicle, I want to give you a piece of context. Last year, the entry point for a Grand Wagoneer was around $85,000. For 2026, Jeep dropped that to $65,000. That's a $20,000 price reduction without removing capability, without downsizing the interior, without pulling back on the powertrain. This is a different vehicle in a different market position than what most people have in their head."</p>
+      <div class="point-label">The Brand Reset</div>
+      <p class="point-script">"You'll also notice the Jeep badge is back on the hood and the liftgate. Jeep actually removed it on the 2025 — just ran Wagoneer scripts — and it created confusion. It's back now, and it connects all that Jeep 4x4 heritage directly to this flagship. This is the top of the Jeep mountain."</p>
+      <div class="point-label">Death of Chrome</div>
+      <p class="point-script">"Look at the grille and the trim details. No chrome. Jeep made a deliberate move to metallic bright silver and dark silver satin finishes. The grille itself is two inches higher and more upright than the 2025. On the Limited Reserve and above, that grille is fully illuminated — it casts light downward at night and functions as a full-width LED light bar."</p>
+      <div class="value-banner"><div class="vb-num">$20K</div><div class="vb-text">Price reduction from 2025. Base now at approximately $65,000. Same capability. More vehicle. Different conversation.</div></div>
+      <div class="sowhat gw"><div class="sowhat-label">So What</div><div class="sowhat-text">Open every Grand Wagoneer walkaround with the price story. It reframes the customer's mental ceiling before they bring up Tahoe or Expedition pricing. You're not justifying cost — you're establishing value before they even ask.</div></div>
+      <div class="pills"><span class="pill">Base ~$65,000</span><span class="pill">Jeep badge restored</span><span class="pill">Grille raised 2"</span><span class="pill">Illuminated grille (Ltd. Reserve+)</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gw">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">2</div>
+      <div class="stop-info"><div class="stop-name">Hood / Hurricane I-6 Engine</div><div class="stop-loc">Hood open, standing driver's side</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">V8 Is Gone — Here's Why That's Good</div>
+      <p class="point-script">"The V8 is out of the Grand Wagoneer lineup for 2026. Every gas-powered model now runs the 3.0-liter Twin-Turbo Hurricane Inline-Six. 420 horsepower, 468 lb-ft of torque, 0 to 60 in 5.3 seconds. That's sports car acceleration in a vehicle that weighs over 6,000 pounds and tows 10,000 pounds."</p>
+      <div class="point-label">87 Octane — The TCO Story</div>
+      <p class="point-script">"The Standard Output Hurricane runs on 87-octane regular fuel. Previous high-output configurations required premium. For a Tahoe or Expedition buyer calculating total cost of ownership over five years — fuel grade matters. This engine gives you more power than the V8 it replaced and it runs on the cheapest gas at the pump."</p>
+      <div class="point-label">The REEV — Plant the Flag Early</div>
+      <p class="point-script">"Later in 2026, a second powertrain arrives called the REEV — Range Extending Electric Vehicle. 92 kWh battery, dual electric motors, 647 horsepower and 620 lb-ft of torque. A Pentastar V6 under the hood acts purely as a generator — never drives the wheels. 150 miles of pure electric range, total range over 500 miles. Zero-to-sixty in about 5 seconds in a Grand Wagoneer."</p>
+      <div class="point-label">New Transmission</div>
+      <p class="point-script">"The 2026 also introduces a new domestically built 880RE 8-speed automatic, replacing the ZF-sourced unit. Smoother power delivery, better shift logic under load, manufactured in Kokomo, Indiana."</p>
+      <div class="sowhat gw"><div class="sowhat-label">So What</div><div class="sowhat-text">The V8 departure will come up. Preempt it with the torque and 0-60 numbers. This engine is objectively faster and more capable than what it replaced. The 87-octane story closes the TCO loop for Tahoe and Expedition defectors.</div></div>
+      <div class="objection"><div class="obj-label">Handle at this stop</div><div class="obj-q">"I heard they took the V8 out. I'm not sure about an I-6 in something this big."</div><div class="obj-a">"420 horsepower, 468 pound-feet of torque, 5.3 seconds to 60 mph. The V8 this replaced made 471 horsepower but required premium fuel and didn't tow any more. This engine runs on regular 87, makes nearly the same power, and delivers the torque lower in the rev range where you actually use it — merging, towing, off-road. The numbers tell the real story."</div></div>
+      <div class="pills"><span class="pill">420 HP</span><span class="pill">468 lb-ft torque</span><span class="pill">0-60 in 5.3 sec</span><span class="pill">87 octane regular</span><span class="pill">880RE transmission</span><span class="pill">REEV: 647 HP (Q2 2026)</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gw">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">3</div>
+      <div class="stop-info"><div class="stop-name">Driver's Side Profile</div><div class="stop-loc">Standing mid-vehicle, driver's side</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Standard vs. L — Make the Call Here</div>
+      <p class="point-script">"Two wheelbase options: standard at about 215 inches, and the L at 227-228 inches — 12 inches longer. That extra length is all behind the third row going into cargo. Max cargo on the standard is about 113 cubic feet flat. On the L, you're at 131 cubic feet — enough floor length to fit a full mattress. If your customer has three kids or regularly hauls gear, the L conversation needs to happen now."</p>
+      <div class="point-label">Trim Walk — Visual Differentiation</div>
+      <p class="point-script">"Base: 18-inch wheels. Limited Altitude: 20-inch alloys, LED light bar rear fascia, blackout accents. Limited Reserve: 22-inch gloss black wheels, air suspension. Summit Reserve: 22-inch with full illuminated grille package. The Upland trim — the off-road play — gets 20-inch wheels wrapped in Falcon WildPeak all-terrain tires, skid plates, tow hooks, and a unique off-road front fascia."</p>
+      <div class="point-label">Quadra-Lift Air Suspension</div>
+      <p class="point-script">"Limited Reserve and above: Quadra-Lift air suspension. Four ride height settings — Park mode lowers it for easy entry, raises to over 10 inches of clearance in Off-Road 2, and automatically drops at highway speed into Aero mode to reduce drag. The system manages itself."</p>
+      <div class="sowhat gw"><div class="sowhat-label">So What</div><div class="sowhat-text">Standard vs. L is your biggest configuration fork. Lock that down at this stop. Wrong wheelbase choice costs both of you time later.</div></div>
+      <div class="pills"><span class="pill">Standard: 215"</span><span class="pill">L: 227-228"</span><span class="pill">10.1" clearance (air susp.)</span><span class="pill">Upland: WildPeak AT tires</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gw">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">4</div>
+      <div class="stop-info"><div class="stop-name">Rear / Cargo</div><div class="stop-loc">Standing at the rear, liftgate open</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">10,000-Pound Towing — Best in Class</div>
+      <p class="point-script">"Standard wheelbase tows 10,000 pounds. Best in class. Chevy Tahoe tops out around 8,400. Toyota Sequoia gets to about 9,500. The Grand Wagoneer beats both — with a twin-turbo inline-six on regular fuel, not a diesel, not a V8. The L model comes in at 9,800 due to curb weight — still better than most competitors."</p>
+      <div class="point-label">Cargo Numbers</div>
+      <p class="point-script">"Behind the third row — standard gives you about 27-28 cubic feet. With all seats flat you're at 113 cubic feet. On the L model that jumps to 131 cubic feet. Third-row seats power fold standard across most trims."</p>
+      <div class="point-label">Sequential LED Signature</div>
+      <p class="point-script">"The brake lights and turn signals animate sequentially. It's a premium lighting signature that matches the front end and makes this vehicle instantly recognizable from behind at night."</p>
+      <div class="sowhat gw"><div class="sowhat-label">So What</div><div class="sowhat-text">Best-in-class towing at $65K against a Tahoe at $60K is the core competitive math. Run that comparison out loud. The customer should leave this stop knowing they get more capability per dollar here than anywhere else in the segment.</div></div>
+      <div class="pills"><span class="pill">10,000 lb towing (std.)</span><span class="pill">9,800 lb (L model)</span><span class="pill">27-28 cu ft (3rd row up)</span><span class="pill">113 cu ft (all flat, std.)</span><span class="pill">131 cu ft (L, all flat)</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gw featured">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">5</div>
+      <div class="stop-info"><div class="stop-name">Third Row — YOUR DIFFERENTIATOR STOP</div><div class="stop-loc">Third-row door open, customer seated in back</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">The "Best Third Row in the Business" Claim</div>
+      <p class="point-script">"Go ahead and sit back there. That's 36 to 38 inches of legroom. Jeep calls it limousine seating and it earns it. A 6'3" adult sits back here without knees in the seat ahead. The Tahoe third row? Adults feel it. The Sequoia? Fixed position, cramped. This is where the Grand Wagoneer wins a comparison drive every time."</p>
+      <div class="point-label">Third Row Is Not a Penalty Box</div>
+      <p class="point-script">"The seat bottom is raised — your thighs are supported, not angled toward the floor. Power recline is available. USB charging ports in the third row are standard on Laredo Altitude and above. Large windows on both sides prevent motion sickness. Look overhead — there's a dedicated third-row glass panel in the tri-panel sunroof. Your third-row passengers get natural light, not a metal ceiling."</p>
+      <div class="point-label">Fam Cam</div>
+      <p class="point-script">"The Fam Cam is a high-definition camera inside the cabin, facing the rear seats, that feeds to the driver's main screen. If you've got a rear-facing car seat or a young child back here, the driver can check on them without turning around. Small feature, big deal for parents."</p>
+      <div class="sowhat gw"><div class="sowhat-label">So What</div><div class="sowhat-text">Put the customer or their spouse in the third row. No amount of talking replaces the physical experience. Let them sit for a full 30 seconds before you say anything.</div></div>
+      <div class="pills"><span class="pill">36-38" 3rd row legroom</span><span class="pill">Power recline available</span><span class="pill">USB charging 3rd row std.</span><span class="pill">Tri-panel sunroof</span><span class="pill">Fam Cam standard</span></div>
+    </div>
+  </div>
+
+  <div class="stop-card gw">
+    <div class="stop-header" onclick="toggle(this)">
+      <div class="stop-num">6</div>
+      <div class="stop-info"><div class="stop-name">Driver's Seat / Tech and Luxury Close</div><div class="stop-loc">Customer in driver's seat</div></div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="stop-body">
+      <div class="point-label">Digital Nervous System</div>
+      <p class="point-script">"The cabin is anchored by a 12.3-inch Uconnect 5 touchscreen paired with a digital gauge cluster. The passenger has their own 10.3-inch display — optically filtered so the driver can't see it, by design. They can manage navigation, entertainment, or vehicle settings independently without reaching over the console."</p>
+      <div class="point-label">Head-Up Display</div>
+      <p class="point-script">"The HUD projects speed, navigation, and safety alerts onto the windshield at a wider eyeline than the previous generation. On a long highway run — and this vehicle was built for long highway runs — you're reading critical info without dropping your eyes to the dash."</p>
+      <div class="point-label">McIntosh Audio</div>
+      <p class="point-script">"Mid trims get the McIntosh MX950 — 19 speakers. Summit trims step up to the MX1375 — 23 speakers, 1,375 watts. McIntosh is a reference-grade audio brand. If your customer appreciates sound, this is a genuine differentiator against Lincoln Navigator and Cadillac Escalade. Neither matches a McIntosh system at this price point."</p>
+      <div class="point-label">Summit Interior Materials</div>
+      <p class="point-script">"On the Summit Reserve: Palermo leather with 24-way power adjustment and integrated massage. Open-pore dark waxed walnut on the trim surfaces. Suede headliner. New Dark Ruby Red interior color option for 2026. The material story here is legitimate — not simulated luxury."</p>
+      <div class="point-label">Selec-Terrain + Off-Road Telemetry</div>
+      <p class="point-script">"Six terrain modes: Auto, Sport, Snow, Mud/Sand, Rock, and Tow/Haul. The digital cluster also displays pitch, roll, steering angle, and GPS coordinates in real time — useful both on trail and for towing across unfamiliar terrain."</p>
+      <div class="sowhat gw"><div class="sowhat-label">So What</div><div class="sowhat-text">This is your luxury close. The Grand Wagoneer competes with Escalade and Navigator on interior quality and beats both on cargo, towing, and off-road capability — at a lower price. Land that comparison explicitly before walking to the desk.</div></div>
+      <div class="objection"><div class="obj-label">Handle at this stop</div><div class="obj-q">"How does this compare to a Tahoe or an Escalade?"</div><div class="obj-a">"Tahoe starts around $60K but tops out at 8,400 pounds towing and the third row is genuinely uncomfortable for adults. Escalade starts around $82K and the third row still doesn't compete with what you just sat in. At $65K, you're getting more tow capacity than either, better third-row seating than both, and a McIntosh audio system that neither matches at comparable price points. The Grand Wagoneer wins that comparison on paper and on the road."</div></div>
+      <div class="pills"><span class="pill">12.3" Uconnect 5</span><span class="pill">10.3" passenger display</span><span class="pill">HUD (upper trims)</span><span class="pill">19-speaker McIntosh (Ltd.)</span><span class="pill">23-speaker McIntosh (Summit)</span><span class="pill">24-way massage (Summit)</span><span class="pill">Palermo leather (Summit)</span><span class="pill">6 terrain modes</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Stellantis Performance Institute — Spring Training Tour 2026</div>
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron');
+    const isOpen = body.classList.contains('open');
+    const panel = header.closest('.vehicle-panel');
+    panel.querySelectorAll('.stop-body').forEach(b => b.classList.remove('open'));
+    panel.querySelectorAll('.chevron').forEach(c => c.classList.remove('open'));
+    if (!isOpen) { body.classList.add('open'); chevron.classList.add('open'); }
+  }
+  function switchTab(vehicle) {
+    document.querySelectorAll('.vehicle-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + vehicle).classList.add('active');
+    document.querySelector('.tab-btn.' + vehicle).classList.add('active');
+  }
+</script>
+</body>
+</html>
