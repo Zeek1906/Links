@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT Partner Qualification Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter','Segoe UI',sans-serif;font-size:15px;background:#f4f6fb;color:#1a2332;-webkit-font-smoothing:antialiased;}
+button,input,select,textarea{font-family:inherit;}
+.hdr{background:#fff;border-bottom:2px solid #e8ecf4;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(26,60,187,0.06);}
+.logo{font-family:'Inter',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.01em;color:#1a2332;}
+.hdr-sep{color:#dde3f0;font-size:18px;margin:0 8px;}
+.hdr-sub{font-family:'Space Mono',monospace;font-size:9px;color:#374165;letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+.ver{font-family:'Space Mono',monospace;font-size:9px;color:#8a96b8;background:#f4f6fb;border:1px solid #dde3f0;border-radius:5px;padding:4px 10px;}
+.tabs{background:#fff;border-bottom:2px solid #e8ecf4;padding:0 28px;display:flex;gap:4px;}
+.tab{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:14px 18px;background:none;border:none;border-bottom:3px solid transparent;color:#6b7cb3;cursor:pointer;font-weight:500;transition:color .15s,border-color .15s;margin-bottom:-2px;}
+.tab:hover{color:#374165;}
+.tab.active{color:#1a3cbb;border-bottom-color:#1a3cbb;font-weight:700;}
+.body{padding:32px 28px;max-width:900px;margin:0 auto;}
+.panel{display:none;}.panel.active{display:block;}
+.page-title{font-size:28px;font-weight:800;color:#1a2332;margin-bottom:6px;letter-spacing:-0.02em;}
+.page-sub{font-size:15px;color:#4a5585;margin-bottom:28px;}
+.card{background:#fff;border:1.5px solid #dde3f0;border-radius:14px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 10px rgba(26,60,187,0.06);}
+.card-hd{padding:16px 24px;border-bottom:1.5px solid #dde3f0;background:#eef2fb;display:flex;align-items:center;justify-content:space-between;}
+.card-hd-label{font-family:'Space Mono',monospace;font-size:12px;color:#1a3cbb;letter-spacing:.07em;text-transform:uppercase;font-weight:700;}
+.card-bd{padding:28px 24px;}
+.field{margin-bottom:18px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+label.lbl{font-size:13px;font-weight:700;color:#1a2332;display:block;margin-bottom:8px;}
+.fi{width:100%;background:#fff;border:1.5px solid #c5cde8;border-radius:9px;padding:13px 15px;font-size:15px;color:#1a2332;outline:none;transition:border-color .15s,box-shadow .15s;}
+.fi:focus{border-color:#1a3cbb;box-shadow:0 0 0 3px rgba(26,60,187,0.1);}
+.fi::placeholder{color:#a0aec0;}
+select.fi{cursor:pointer;background-color:#fff;padding-right:14px;}
+textarea.fi{resize:vertical;min-height:90px;line-height:1.6;}
+.form-actions{display:flex;justify-content:flex-end;gap:12px;padding-top:20px;border-top:1.5px solid #eef1f8;margin-top:8px;}
+.btn-primary{background:#1a3cbb;color:#fff;border:none;border-radius:9px;padding:14px 28px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 14px rgba(26,60,187,0.28);transition:opacity .15s,transform .1s;}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-ghost{background:#fff;color:#374165;border:1.5px solid #c5cde8;border-radius:9px;padding:12px 20px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:border-color .15s,color .15s;}
+.btn-ghost:hover{border-color:#1a3cbb;color:#1a3cbb;}
+.loading-wrap{padding:48px 0 40px;}
+.loading-bar{height:3px;background:#e8ecf4;border-radius:2px;overflow:hidden;margin-bottom:20px;position:relative;}
+.lbar-fill{position:absolute;height:100%;width:42%;background:#1a3cbb;border-radius:2px;animation:slide 1.6s ease-in-out infinite;}
+@keyframes slide{0%{left:-42%}100%{left:110%}}
+.loading-status{font-family:'Space Mono',monospace;font-size:12px;color:#1a3cbb;font-weight:600;}
+.error-box{background:#fff5f5;border:1.5px solid rgba(224,82,82,.3);border-radius:9px;padding:14px 18px;font-family:'Space Mono',monospace;font-size:12px;color:#e05252;margin-bottom:18px;}
+.result-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.result-title{font-size:20px;font-weight:800;color:#1a2332;margin-bottom:4px;}
+.result-meta{font-size:13px;color:#6b7cb3;}
+.score-hero{display:flex;align-items:flex-start;gap:28px;flex-wrap:wrap;}
+.score-num{font-family:'Space Mono',monospace;font-size:56px;font-weight:800;line-height:1;}
+.score-denom{font-family:'Space Mono',monospace;font-size:11px;color:#8a96b8;margin-top:4px;}
+.score-right{flex:1;min-width:200px;}
+.score-summary{font-size:15px;line-height:1.75;color:#1a2332;margin-top:12px;}
+.vbadge{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:7px 16px;border-radius:20px;display:inline-block;border:1.5px solid;}
+.crit-row{background:#fff;border:1.5px solid #dde3f0;border-radius:10px;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 4px rgba(26,60,187,0.04);}
+.crit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.crit-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.crit-num{font-family:'Space Mono',monospace;font-size:10px;color:#b0b8d9;}
+.crit-name{font-size:14px;font-weight:700;color:#1a2332;}
+.crit-score{font-family:'Space Mono',monospace;font-size:18px;font-weight:800;}
+.crit-note{font-size:13px;color:#374165;line-height:1.6;margin-top:6px;}
+.dq-tag{font-family:'Space Mono',monospace;font-size:9px;color:#e05252;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.25);border-radius:4px;padding:2px 7px;font-weight:700;}
+.sbar{height:5px;background:#e8ecf4;border-radius:3px;overflow:hidden;margin:7px 0 4px;}
+.sbar-fill{height:100%;border-radius:3px;transition:width .8s ease;}
+.brief-box{border-radius:10px;padding:16px 18px;margin-bottom:12px;}
+.brief-lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.brief-txt{font-size:14px;line-height:1.7;color:#1a2332;}
+.flag-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-size:13px;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:#fff;border:1.5px solid #dde3f0;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(26,60,187,0.06);}
+.stat-val{font-family:'Space Mono',monospace;font-size:32px;font-weight:800;line-height:1;margin-bottom:6px;}
+.stat-lbl{font-size:11px;color:#374165;letter-spacing:.04em;text-transform:uppercase;font-weight:600;}
+.pl-row{background:#fff;border:1.5px solid #dde3f0;border-radius:12px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 6px rgba(26,60,187,0.05);}
+.pl-name{font-size:15px;font-weight:700;color:#1a2332;margin-bottom:3px;}
+.pl-meta{font-size:12px;color:#374165;}
+.pl-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px;}
+.pl-bar-lbl{font-family:'Space Mono',monospace;font-size:8px;color:#8a96b8;text-align:center;margin-top:3px;}
+.pl-score{font-family:'Space Mono',monospace;font-size:26px;font-weight:800;line-height:1;flex-shrink:0;text-align:right;}
+.empty{text-align:center;padding:70px 20px;}
+.empty-txt{font-family:'Space Mono',monospace;font-size:11px;color:#b0b8d9;letter-spacing:.07em;line-height:2.2;}
+.thresh-row{display:flex;gap:2px;background:#e8ecf4;border-radius:10px;overflow:hidden;margin-bottom:24px;}
+.thresh-cell{flex:1;background:#fff;padding:14px 10px;text-align:center;}
+.thresh-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:800;line-height:1;}
+.thresh-lbl{font-family:'Space Mono',monospace;font-size:9px;color:#8a96b8;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+.rub-card{background:#fff;border:1.5px solid #dde3f0;border-radius:12px;padding:20px 22px;margin-bottom:12px;box-shadow:0 1px 6px rgba(26,60,187,0.05);}
+.rub-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px;}
+.rub-name{font-size:14px;font-weight:700;color:#1a2332;}
+.rub-badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:5px;}
+.rub-sub{font-size:13px;color:#374165;margin-bottom:14px;line-height:1.6;}
+.rub-scale{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.rsc{border-radius:8px;padding:12px 14px;}
+.rsc-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:800;line-height:1;margin-bottom:5px;}
+.rsc-txt{font-size:12px;line-height:1.55;}
+@media(max-width:600px){
+  .field-row,.stat-grid,.rub-scale{grid-template-columns:1fr;}
+  .hdr,.body,.tabs{padding-left:16px;padding-right:16px;}
+  .score-num{font-size:42px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div style="display:flex;align-items:center;">
+    <span class="logo">RAYZIT</span>
+    <span class="hdr-sep">|</span>
+    <span class="hdr-sub">Partner Qualification Engine</span>
+  </div>
+  <span class="ver">AI-Powered · v2.0</span>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('score',this)">Score Lead</button>
+  <button class="tab" onclick="switchTab('pipeline',this)">Pipeline</button>
+  <button class="tab" onclick="switchTab('rubric',this)">Rubric</button>
+</div>
+
+<div id="api-banner" style="background:#fffbea;border-bottom:2px solid #f5c842;padding:12px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+  <span style="font-size:13px;font-weight:600;color:#7a5c00;white-space:nowrap;">🔑 Anthropic API Key required to run scores</span>
+  <input type="password" id="api-key-input" placeholder="sk-ant-..." style="flex:1;min-width:260px;max-width:420px;background:#fff;border:1.5px solid #e8c84a;border-radius:7px;padding:9px 13px;font-size:13px;color:#1a2332;outline:none;font-family:inherit;">
+  <button onclick="saveKey()" style="background:#1a3cbb;color:#fff;border:none;border-radius:7px;padding:9px 18px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">Save Key</button>
+  <span id="key-status" style="font-size:12px;color:#7a5c00;"></span>
+</div>
+
+<div class="body">
+
+  <!-- SCORE -->
+  <div id="panel-score" class="panel active">
+    <div id="view-form">
+      <div class="page-title">Score a Nonprofit</div>
+      <div class="page-sub">AI evaluates the org against RAYZIT's 6-criteria rubric — fill in what you know and submit</div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-label">Lead Intake</span></div>
+        <div class="card-bd">
+          <div class="field">
+            <label class="lbl" for="f-name">Organization Name *</label>
+            <div style="display:flex;gap:10px;align-items:stretch;">
+              <input class="fi" id="f-name" type="text" placeholder="e.g. Chicago Westside Youth Football" style="flex:1;" onkeydown="if(event.key==='Enter')lookupOrg()">
+              <button onclick="lookupOrg()" id="lookup-btn" style="background:#eef2fb;color:#1a3cbb;border:1.5px solid #c5cde8;border-radius:9px;padding:0 18px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.background='#dde8ff'" onmouseout="this.style.background='#eef2fb'">
+                Look Up
+              </button>
+            </div>
+            <div id="lookup-status" style="font-size:12px;color:#1a3cbb;margin-top:6px;font-family:'Space Mono',monospace;display:none;"></div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl" for="f-cat">Category *</label>
+              <select class="fi" id="f-cat">
+                <option value="">Select category...</option>
+                <option>Education</option>
+                <option>Youth Development</option>
+                <option>Faith-Based</option>
+                <option>Animal Welfare</option>
+                <option>Arts &amp; Culture</option>
+                <option>Health &amp; Medical</option>
+                <option>Community Development</option>
+                <option>Greek / Fraternal</option>
+                <option>Veterans / Military</option>
+                <option>Food Security</option>
+                <option>Environmental</option>
+                <option>Human Trafficking / Child Safety</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="lbl" for="f-loc">Location *</label>
+              <input class="fi" id="f-loc" type="text" placeholder="City, State">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl" for="f-web">Website</label>
+              <input class="fi" id="f-web" type="text" placeholder="https://...">
+            </div>
+            <div class="field">
+              <label class="lbl" for="f-ig">Instagram</label>
+              <input class="fi" id="f-ig" type="text" placeholder="@handle">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl" for="f-by">Submitted By</label>
+              <select class="fi" id="f-by">
+                <option value="">Select...</option>
+                <option>Fred</option>
+                <option>Tavares</option>
+                <option>Marvin</option>
+                <option>Derek</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="lbl" for="f-ein">EIN (optional)</label>
+              <input class="fi" id="f-ein" type="text" placeholder="XX-XXXXXXX">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="lbl" for="f-supporters">Approx. Active Supporters <span style="font-weight:400;color:#8a96b8;">(optional)</span></label>
+              <select class="fi" id="f-supporters">
+                <option value="">Unknown / not sure</option>
+                <option value="under50">Under 50</option>
+                <option value="50to99">50 – 99</option>
+                <option value="100to500">100 – 500</option>
+                <option value="500to2000">500 – 2,000</option>
+                <option value="2000to5000">2,001 – 5,000</option>
+                <option value="over5000">Over 5,000</option>
+              </select>
+            </div>
+            <div class="field" style="display:flex;flex-direction:column;justify-content:flex-end;">
+              <label class="lbl" style="color:#8a96b8;font-weight:500;font-size:12px;">Why this matters</label>
+              <div style="font-size:12px;color:#6b7cb3;line-height:1.6;padding:8px 0;">100–2,000 is RAYZIT's sweet spot for fast donor activation. This directly impacts the Community Reach score.</div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="f-notes">Notes</label>
+            <textarea class="fi" id="f-notes" placeholder="What do you already know — size, giving history, how you found them, any flags, leadership info..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn-ghost" onclick="clearForm()">Clear</button>
+            <button class="btn-primary" onclick="runScore()">Run AI Score →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-loading" style="display:none;">
+      <div class="loading-wrap">
+        <div class="loading-bar"><div class="lbar-fill"></div></div>
+        <div class="loading-status" id="loading-msg">Analyzing organization...</div>
+      </div>
+    </div>
+
+    <div id="view-error" style="display:none;">
+      <div class="error-box" id="error-msg"></div>
+      <button class="btn-ghost" onclick="showForm()">← Try Again</button>
+    </div>
+
+    <div id="view-result" style="display:none;"></div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div id="panel-pipeline" class="panel">
+    <div class="page-title">Lead Pipeline</div>
+    <div class="page-sub">All scored nonprofit leads</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-val" id="st-total" style="color:#1a2332">0</div><div class="stat-lbl">Total Leads</div></div>
+      <div class="stat-card"><div class="stat-val" id="st-approve" style="color:#00875a">0</div><div class="stat-lbl">Approve</div></div>
+      <div class="stat-card"><div class="stat-val" id="st-caution" style="color:#8a6000">0</div><div class="stat-lbl">Caution</div></div>
+      <div class="stat-card"><div class="stat-val" id="st-fail" style="color:#e05252">0</div><div class="stat-lbl">Pass / DQ</div></div>
+    </div>
+    <div id="pl-list"><div class="empty"><div class="empty-txt">No leads scored yet.<br>Score a lead to populate the pipeline.</div></div></div>
+  </div>
+
+  <!-- RUBRIC -->
+  <div id="panel-rubric" class="panel">
+    <div class="page-title">Partner Rubric</div>
+    <div class="page-sub">v2.0 · 6 Criteria · 18 Points Max · Minimum 14 to Proceed</div>
+    <div class="thresh-row">
+      <div class="thresh-cell"><div class="thresh-num" style="color:#00875a">18</div><div class="thresh-lbl">Max pts</div></div>
+      <div class="thresh-cell"><div class="thresh-num" style="color:#00875a">14+</div><div class="thresh-lbl">Approve</div></div>
+      <div class="thresh-cell"><div class="thresh-num" style="color:#8a6000">10–13</div><div class="thresh-lbl">Caution</div></div>
+      <div class="thresh-cell"><div class="thresh-num" style="color:#e05252">&lt;10</div><div class="thresh-lbl">Pass</div></div>
+      <div class="thresh-cell"><div class="thresh-num" style="color:#e05252">C6=1</div><div class="thresh-lbl">Auto-DQ</div></div>
+    </div>
+    <div id="rubric-cards"></div>
+  </div>
+</div>
+
+<script>
+const CRIT=[
+  {id:"nonprofit_status",num:"01",name:"Nonprofit Status & Compliance",dq:false,sub:"Active 501(c)(3), IRS standing, state filings current.",scale:["Lapsed, unclear, or unverifiable status","Active but minor gaps in filings or watchdog profile","Fully compliant — active registration, current 990, clean state filings"]},
+  {id:"mission_alignment",num:"02",name:"Mission Alignment",dq:false,sub:"Mission resonates with RAYZIT donor communities.",scale:["Weak or no alignment with RAYZIT target demographics","Moderate fit — relevant cause but indirect audience overlap","Strong fit — PTAs, faith communities, D9, youth orgs, direct community impact"]},
+  {id:"digital_presence",num:"03",name:"Digital Presence",dq:false,sub:"Active website, social, and online giving infrastructure.",scale:["Dormant — no website, no social activity, no online giving","Basic — functional site or occasional social, limited digital giving","Strong — active website, weekly+ social, email list, donate button in use"]},
+  {id:"fundraising_readiness",num:"04",name:"Fundraising Readiness",dq:false,sub:"Capacity and culture to run digital giving campaigns.",scale:["None — no donate page, no campaigns, no visible fundraising history","Some experience — annual drive or event, no giving rhythm yet","Ready — active campaigns, peer-to-peer history, trained donor base"]},
+  {id:"community_reach",num:"05",name:"Community Reach",dq:false,sub:"Size and engagement of active supporter base.",scale:["Under 50 or over 5,000 — too small or too large to move fast","50–99 or 2,001–5,000 — workable with caveats","100–2,000 active supporters — ideal activation window for RAYZIT"]},
+  {id:"reputational_risk",num:"06",name:"Reputational & Legal Risk",dq:true,sub:"No litigation, misconduct, or exposure that could transfer to RAYZIT.",scale:["Active litigation, misconduct, or serious reputational flag — AUTO-DQ","Minor concerns worth monitoring — no active legal issues","Clean — no flags, no litigation, no watchdog concerns"]}
+];
+
+const pipeline=[];
+let currentResult=null;
+
+const sc=n=>n===3?"#00875a":n===2?"#8a6000":"#e05252";
+const scBg=n=>n===3?"rgba(0,135,90,0.1)":n===2?"rgba(138,96,0,0.1)":"rgba(224,82,82,0.1)";
+const scBdr=n=>n===3?"rgba(0,135,90,0.3)":n===2?"rgba(138,96,0,0.3)":"rgba(224,82,82,0.3)";
+const vcColor=(t,dq,any1)=>dq?"#e05252":(t>=14&&!any1)?"#00875a":t>=10||any1?"#8a6000":"#e05252";
+const vcLabel=(t,dq,any1)=>dq?"Auto-Disqualified":(t>=14&&!any1)?"Approve":t>=10||any1?"Caution — Revisit":"Pass";
+const vcBg=(t,dq,any1)=>dq?"rgba(224,82,82,0.1)":(t>=14&&!any1)?"rgba(0,135,90,0.1)":t>=10||any1?"rgba(138,96,0,0.1)":"rgba(224,82,82,0.1)";
+const vcBdr=(t,dq,any1)=>dq?"rgba(224,82,82,0.35)":(t>=14&&!any1)?"rgba(0,135,90,0.35)":t>=10||any1?"rgba(138,96,0,0.35)":"rgba(224,82,82,0.35)";
+
+function buildPrompt(f){
+  return `You are a nonprofit partner qualification analyst for RAYZIT, a fintech platform routing round-up donations and recurring gifts to nonprofits via mobile. Evaluate this organization as a potential RAYZIT partner.
+
+Score across RAYZIT's 6 official rubric criteria. Be analytical and specific. Score conservatively when data is missing and flag UNVERIFIED.
+
+CRITERIA:
+1. nonprofit_status: 3=Fully compliant 501c3, current 990, clean filings. 2=Active, minor gaps. 1=Lapsed/unclear.
+2. mission_alignment: 3=Strong fit with RAYZIT communities (PTAs, faith, D9, youth, direct impact). 2=Moderate. 1=Weak/no fit.
+3. digital_presence: 3=Strong multi-channel (weekly social, email list, active website, donate button). 2=Basic. 1=Dormant/none.
+4. fundraising_readiness: 3=Active campaigns, peer-to-peer history, trained donor base. 2=Annual drive or occasional ask. 1=No infrastructure.
+5. community_reach: 3=100-2000 supporters (ideal for RAYZIT). 2=50-99 or 2001-5000. 1=Under 50 or over 5000.
+6. reputational_risk: 3=Clean, no flags. 2=Minor concerns, no active issues. 1=Active litigation/misconduct/major risk (AUTO-DISQUALIFIER regardless of total).
+
+THRESHOLDS: 14+ = Approve. 10-13 = Caution/revisit. Below 10 = Pass. C6=1 = Auto-Disqualified.
+
+ORG INFO:
+Name: ${f.name}
+Category: ${f.cat}
+Location: ${f.loc}
+Website: ${f.web||"Not provided"}
+Instagram: ${f.ig||"Not provided"}
+EIN: ${f.ein||"Not provided"}
+Supporter Count: ${f.supporters?supportersMap[f.supporters]:"Not provided — estimate from other signals"}
+Notes: ${f.notes||"None provided"}
+
+IMPORTANT: Respond ONLY with a valid JSON object. No markdown, no backticks, no text before or after.
+{"scores":{"nonprofit_status":{"score":0,"note":""},"mission_alignment":{"score":0,"note":""},"digital_presence":{"score":0,"note":""},"fundraising_readiness":{"score":0,"note":""},"community_reach":{"score":0,"note":""},"reputational_risk":{"score":0,"note":""}},"total":0,"recommendation":"","summary":"","pitch_angle":"","flags":[]}`;
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.className='tab');
+  btn.className='tab active';
+  document.querySelectorAll('.panel').forEach(p=>p.className='panel');
+  document.getElementById('panel-'+name).className='panel active';
+  if(name==='pipeline') renderPipeline();
+}
+
+function showForm(){
+  document.getElementById('view-form').style.display='block';
+  document.getElementById('view-loading').style.display='none';
+  document.getElementById('view-error').style.display='none';
+  document.getElementById('view-result').style.display='none';
+}
+
+function clearForm(){
+  ['f-name','f-cat','f-loc','f-web','f-ig','f-by','f-ein','f-supporters','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('view-error').style.display='none';
+}
+
+async function runScore(){
+  const name=document.getElementById('f-name').value.trim();
+  const cat=document.getElementById('f-cat').value;
+  const loc=document.getElementById('f-loc').value.trim();
+  if(!getKey()){alert('Please enter your Anthropic API key at the top of the page first.');document.getElementById('api-key-input').focus();return;}
+  if(!name||!cat||!loc){alert('Name, Category, and Location are required.');return;}
+  const supportersMap={'under50':'Under 50 active supporters','50to99':'50–99 active supporters','100to500':'100–500 active supporters','500to2000':'500–2,000 active supporters','2000to5000':'2,001–5,000 active supporters','over5000':'Over 5,000 active supporters','':`Unknown`};
+  const supportersVal=document.getElementById('f-supporters').value;
+  const f={name,cat,loc,
+    web:document.getElementById('f-web').value.trim(),
+    ig:document.getElementById('f-ig').value.trim(),
+    by:document.getElementById('f-by').value.trim(),
+    ein:document.getElementById('f-ein').value.trim(),
+    supporters:supportersVal,
+    notes:document.getElementById('f-notes').value.trim()
+  };
+  await new Promise(r=>setTimeout(r,1500));
+  const msgs=['Analyzing mission alignment...','Checking digital footprint...','Evaluating fundraising readiness...','Assessing community reach...','Running reputational check...','Finalizing scores...'];
+  let mi=0;
+  document.getElementById('view-form').style.display='block';
+  document.getElementById('view-loading').style.display='block';
+  document.getElementById('view-error').style.display='none';
+  document.getElementById('view-result').style.display='none';
+  document.getElementById('loading-msg').textContent=msgs[0];
+  const ticker=setInterval(()=>{if(++mi<msgs.length)document.getElementById('loading-msg').textContent=msgs[mi];},2200);
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,
+        system:'JSON-only. Return one valid JSON object, nothing else.',
+        messages:[{role:'user',content:buildPrompt(f)}]})
+    });
+    clearInterval(ticker);
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'API error '+res.status);}
+    const data=await res.json();
+    const text=(data.content||[]).map(i=>i.text||'').join('');
+    const s=text.indexOf('{'),e=text.lastIndexOf('}');
+    if(s===-1||e===-1)throw new Error('No JSON in response');
+    let parsed;
+    try{parsed=JSON.parse(text.slice(s,e+1));}
+    catch(_){parsed=JSON.parse(text.slice(s,e+1).replace(/[\x00-\x1F\x7F]/g,' '));}
+    const dq=parsed.scores?.reputational_risk?.score===1;
+    const hasAnyOne=Object.values(parsed.scores||{}).some(s=>s.score===1);
+    currentResult={...parsed,...f,dq,hasAnyOne,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),id:Date.now()};
+    document.getElementById('view-loading').style.display='none';
+    renderResult(currentResult);
+  }catch(err){
+    clearInterval(ticker);
+    document.getElementById('view-loading').style.display='none';
+    document.getElementById('view-error').style.display='block';
+    document.getElementById('error-msg').textContent='▸ '+( err.message||'Scoring failed. Try again.');
+  }
+}
+
+function renderResult(r){
+  const a1=r.hasAnyOne||false;const col=vcColor(r.total,r.dq,a1),lbl=vcLabel(r.total,r.dq,a1),bg=vcBg(r.total,r.dq,a1),bdr=vcBdr(r.total,r.dq,a1);
+  const critHTML=CRIT.map(c=>{
+    const s=r.scores[c.id]||{score:1,note:''};
+    const col=sc(s.score),cbg=scBg(s.score),cbdr=scBdr(s.score);
+    return`<div class="crit-row">
+      <div class="crit-head">
+        <div class="crit-left">
+          <span class="crit-num">${c.num}</span>
+          <span class="crit-name">${c.name}</span>
+          ${c.dq&&s.score===1?'<span class="dq-tag">AUTO-DQ</span>':s.score===1?'<span class="dq-tag" style="color:#8a6000;background:rgba(138,96,0,0.1);border-color:rgba(138,96,0,0.3)">WEAK</span>':''}
+        </div>
+        <span class="crit-score" style="color:${col}">${s.score}/3</span>
+      </div>
+      <div class="sbar"><div class="sbar-fill" style="width:${(s.score/3)*100}%;background:${col}"></div></div>
+      ${s.note?`<div class="crit-note">${s.note}</div>`:''}
+    </div>`;
+  }).join('');
+  const pitchHTML=r.pitch_angle?`<div class="brief-box" style="background:rgba(0,135,90,0.07);border:1.5px solid rgba(0,135,90,0.25);">
+    <div class="brief-lbl" style="color:#00875a">Marvin's Pitch Angle</div>
+    <div class="brief-txt">${r.pitch_angle}</div></div>`:'';
+  const flagsHTML=r.flags&&r.flags.length?`<div class="brief-box" style="background:rgba(138,96,0,0.07);border:1.5px solid rgba(138,96,0,0.25);">
+    <div class="brief-lbl" style="color:#8a6000">Flags</div>
+    ${r.flags.map(f=>`<div class="flag-item"><span style="color:#8a6000;font-weight:700">▸</span><span style="color:#6b4a00">${f}</span></div>`).join('')}</div>`:'';
+
+  document.getElementById('view-result').innerHTML=`
+    <div class="result-hdr">
+      <div>
+        <div class="result-title">${r.name}</div>
+        <div class="result-meta">${r.cat} · ${r.loc}${r.by?' · Submitted by '+r.by:''} · ${r.date}</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-shrink:0;">
+        <button class="btn-ghost" onclick="saveToPipeline()">+ Pipeline</button>
+        <button class="btn-ghost" onclick="showForm()">← New</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-bd">
+        <div class="score-hero">
+          <div>
+            <div class="score-num" style="color:${col}">${r.dq?'DQ':r.total}</div>
+            <div class="score-denom">/ 18 points</div>
+          </div>
+          <div class="score-right">
+            <span class="vbadge" style="background:${bg};color:${col};border-color:${bdr}">${lbl}</span>
+            <div class="score-summary">${r.summary||''}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    ${critHTML}${pitchHTML}${flagsHTML}
+    <div class="card" style="margin-top:6px;">
+      <div class="card-hd"><span class="card-hd-label">Recommendation</span></div>
+      <div class="card-bd"><div style="font-size:16px;font-weight:700;color:${col}">${r.recommendation||lbl}</div></div>
+    </div>
+    <button class="btn-ghost" style="width:100%;margin-top:12px;text-align:center;" onclick="switchTab('pipeline',document.querySelectorAll('.tab')[1])">View Pipeline →</button>`;
+  document.getElementById('view-result').style.display='block';
+}
+
+function saveToPipeline(){
+  if(!currentResult)return;
+  if(pipeline.find(p=>p.id===currentResult.id)){alert('Already saved to pipeline.');return;}
+  pipeline.unshift({...currentResult});
+  renderPipeline();
+  alert(currentResult.name+' saved to pipeline.');
+}
+
+function renderPipeline(){
+  document.getElementById('st-total').textContent=pipeline.length;
+  document.getElementById('st-approve').textContent=pipeline.filter(p=>!p.dq&&p.total>=14).length;
+  document.getElementById('st-caution').textContent=pipeline.filter(p=>!p.dq&&p.total>=10&&p.total<14).length;
+  document.getElementById('st-fail').textContent=pipeline.filter(p=>p.dq||p.total<10).length;
+  const el=document.getElementById('pl-list');
+  if(!pipeline.length){el.innerHTML='<div class="empty"><div class="empty-txt">No leads scored yet.<br>Score a lead to populate the pipeline.</div></div>';return;}
+  el.innerHTML=pipeline.map(p=>{
+    const pa1=p.hasAnyOne||false;const col=vcColor(p.total,p.dq,pa1),lbl=vcLabel(p.total,p.dq,pa1),bg=vcBg(p.total,p.dq,pa1),bdr=vcBdr(p.total,p.dq,pa1);
+    const bars=CRIT.map(c=>{const s=p.scores[c.id]||{score:1};return`<div><div class="sbar" style="margin:0"><div class="sbar-fill" style="width:${(s.score/3)*100}%;background:${sc(s.score)}"></div></div><div class="pl-bar-lbl">${c.num}</div></div>`;}).join('');
+    return`<div class="pl-row">
+      <div style="flex:1;min-width:0;">
+        <div class="pl-name">${p.name}</div>
+        <div class="pl-meta">${p.cat} · ${p.loc} · ${p.date}</div>
+        <div class="pl-bars">${bars}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="pl-score" style="color:${col}">${p.dq?'DQ':p.total}</div>
+        <div style="margin-top:6px;"><span class="vbadge" style="font-size:10px;padding:5px 12px;background:${bg};color:${col};border-color:${bdr}">${lbl}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('rubric-cards').innerHTML=CRIT.map(c=>{
+  const scaleHTML=[...c.scale].reverse().map((txt,j)=>{
+    const score=3-j,col=sc(score),bg=scBg(score),bdr=scBdr(score);
+    return`<div class="rsc" style="background:${bg};border:1.5px solid ${bdr};"><div class="rsc-num" style="color:${col}">${score}</div><div class="rsc-txt" style="color:${col}">${txt}</div></div>`;
+  }).join('');
+  return`<div class="rub-card">
+    <div class="rub-head">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:#b0b8d9">${c.num}</span>
+        <span class="rub-name">${c.name}</span>
+      </div>
+      <span class="rub-badge" style="background:${c.dq?'rgba(224,82,82,0.1)':'rgba(26,60,187,0.08)'};color:${c.dq?'#e05252':'#1a3cbb'};border:1.5px solid ${c.dq?'rgba(224,82,82,0.3)':'rgba(26,60,187,0.2)'}">${c.dq?'AUTO-DQ IF 1':'MAX 3 PTS'}</span>
+    </div>
+    <div class="rub-sub">${c.sub}</div>
+    <div class="rub-scale">${scaleHTML}</div>
+  </div>`;
+}).join('');
+
+async function lookupOrg(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){alert('Enter an organization name first.');return;}
+  if(!getKey()){alert('Please enter your Anthropic API key first.');document.getElementById('api-key-input').focus();return;}
+  const btn=document.getElementById('lookup-btn');
+  const status=document.getElementById('lookup-status');
+  btn.textContent='Looking up...';btn.disabled=true;
+  status.style.display='block';status.textContent='Searching for org info...';
+  const lookupPrompt=`Look up this nonprofit: "${name}"
+
+Find: website, Instagram handle, EIN (check ProPublica nonprofits explorer and Charity Navigator), city/state location, and category.
+
+Return ONLY this JSON (empty string if not found):
+{"website":"","instagram":"","ein":"","location":"","category":"","notes":""}
+
+Categories: Education, Youth Development, Faith-Based, Animal Welfare, Arts & Culture, Health & Medical, Community Development, Greek / Fraternal, Veterans / Military, Food Security, Environmental, Human Trafficking / Child Safety, Other
+
+JSON only.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,
+        system:'You are a JSON-only API. Respond with a single valid JSON object and nothing else.',
+        tools:[{"type":"web_search_20250305","name":"web_search"}],
+        messages:[{role:'user',content:lookupPrompt}]})
+    });
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'Lookup failed');}
+    const data=await res.json();
+    const text=(data.content||[]).filter(i=>i.type==='text').map(i=>i.text||'').join('');
+    const s=text.indexOf('{'),e=text.lastIndexOf('}');
+    if(s===-1||e===-1)throw new Error('No data found');
+    const info=JSON.parse(text.slice(s,e+1));
+    if(info.website) document.getElementById('f-web').value=info.website;
+    if(info.instagram) document.getElementById('f-ig').value=info.instagram;
+    if(info.ein) document.getElementById('f-ein').value=info.ein;
+    if(info.location) document.getElementById('f-loc').value=info.location;
+    if(info.category){
+      const sel=document.getElementById('f-cat');
+      for(let o of sel.options){if(o.value===info.category||o.text===info.category){sel.value=o.value||o.text;break;}}
+    }
+    if(info.notes){
+      const notes=document.getElementById('f-notes');
+      if(!notes.value) notes.value=info.notes;
+    }
+    status.style.color='#00875a';
+    status.textContent='✓ Info found — review and add your own notes before scoring';
+  }catch(err){
+    status.style.color='#e05252';
+    status.textContent='▸ Lookup failed: '+err.message+'. Fill in manually.';
+  }finally{
+    btn.textContent='Look Up';btn.disabled=false;
+  }
+}
+
+function saveKey(){
+  const k = document.getElementById('api-key-input').value.trim();
+  if(!k.startsWith('sk-ant-')){ alert('That doesn\'t look like a valid Anthropic API key. It should start with sk-ant-'); return; }
+  sessionStorage.setItem('rayzit_key', k);
+  document.getElementById('api-key-input').value='';
+  document.getElementById('api-banner').style.background='#f0fff8';
+  document.getElementById('api-banner').style.borderBottomColor='#00875a';
+  document.getElementById('key-status').textContent='✓ Key saved for this session';
+  document.getElementById('key-status').style.color='#00875a';
+}
+function getKey(){
+  return sessionStorage.getItem('rayzit_key')||'';
+}
+// Check on load
+window.addEventListener('load', ()=>{
+  if(sessionStorage.getItem('rayzit_key')){
+    document.getElementById('api-banner').style.background='#f0fff8';
+    document.getElementById('api-banner').style.borderBottomColor='#00875a';
+    document.getElementById('key-status').textContent='✓ Key active for this session';
+    document.getElementById('key-status').style.color='#00875a';
+  }
+});
+</script>
+</body>
+</html>
