@@ -1,0 +1,279 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .header { padding: 1.5rem 1.5rem 1rem; }
+  .header h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .header p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 1.5rem 1rem; }
+  .filter-btn { font-size: 12px; padding: 4px 12px; border-radius: 999px; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { background: var(--color-background-secondary); }
+  .filter-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 0; }
+  .card { padding: 1rem 1.5rem; border-top: 0.5px solid var(--color-border-tertiary); display: flex; gap: 16px; align-items: flex-start; transition: background .1s; cursor: default; }
+  .card:hover { background: var(--color-background-secondary); }
+  .card.hidden { display: none; }
+  .tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .tag-placement { background: var(--color-background-info); color: var(--color-text-info); }
+  .tag-reasoning { background: var(--color-background-success); color: var(--color-text-success); }
+  .tag-tone { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .tag-output { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .code { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--color-text-primary); background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; padding: 2px 6px; display: inline-block; margin-bottom: 4px; }
+  .title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+  .desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+  .example { font-size: 12px; color: var(--color-text-tertiary); margin-top: 5px; font-style: italic; }
+  .reliability { display: flex; gap: 3px; margin-top: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-border-secondary); }
+  .dot.on { background: var(--color-text-success); }
+  .meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; min-width: 80px; }
+  .position { font-size: 11px; color: var(--color-text-tertiary); text-align: right; }
+  .empty { padding: 2rem 1.5rem; font-size: 14px; color: var(--color-text-tertiary); text-align: center; display: none; }
+</style>
+
+<div class="header">
+  <h1>Prompt modifier toolkit</h1>
+  <p>Community-tested conventions — not official Claude features. Effect is real but varies.</p>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filter('all', this)">All</button>
+  <button class="filter-btn" onclick="filter('reasoning', this)">Reasoning</button>
+  <button class="filter-btn" onclick="filter('tone', this)">Tone / depth</button>
+  <button class="filter-btn" onclick="filter('output', this)">Output format</button>
+  <button class="filter-btn" onclick="filter('placement', this)">Placement</button>
+</div>
+
+<div class="grid" id="grid">
+
+  <div class="card" data-cat="reasoning">
+    <div style="flex:1">
+      <div class="code">OODA</div>
+      <div class="title">Observe, Orient, Decide, Act</div>
+      <div class="desc">Forces deliberate reasoning before responding. Claude thinks through context, constraints, and tradeoffs instead of jumping to an answer.</div>
+      <div class="example">Best for: complex strategy, ambiguous decisions, anything where the obvious answer might be wrong</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-reasoning">Reasoning</span>
+      <span class="position">Start of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="reasoning">
+    <div style="flex:1">
+      <div class="code">Think step by step</div>
+      <div class="title">Chain of thought</div>
+      <div class="desc">Tells Claude to show its work. Improves accuracy on math, logic, and multi-step problems by forcing intermediate reasoning to be explicit.</div>
+      <div class="example">Best for: math, logic puzzles, debugging, structured analysis</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-reasoning">Reasoning</span>
+      <span class="position">Anywhere</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="reasoning">
+    <div style="flex:1">
+      <div class="code">Before answering, consider...</div>
+      <div class="title">Pre-flight reasoning</div>
+      <div class="desc">Explicitly names the dimensions Claude should weigh before generating a response. More targeted than OODA for specific problem types.</div>
+      <div class="example">"Before answering, consider the legal, financial, and reputational angles."</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-reasoning">Reasoning</span>
+      <span class="position">Start of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="tone">
+    <div style="flex:1">
+      <div class="code">L99</div>
+      <div class="title">Max expertise level</div>
+      <div class="desc">Signals Claude to respond at the highest domain expertise level. Drops beginner framing, assumes deep knowledge, delivers high-density nuanced output.</div>
+      <div class="example">Best for: clinical supplement analysis, VC-level strategy, institutional-grade research</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-tone">Tone / depth</span>
+      <span class="position">End of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="tone">
+    <div style="flex:1">
+      <div class="code">ELI5 / ELI15</div>
+      <div class="title">Explain like I'm 5 / 15</div>
+      <div class="desc">Calibrates explanation complexity. ELI5 = total beginner, no jargon. ELI15 = smart teenager, can handle concepts but needs plain language.</div>
+      <div class="example">Best for: onboarding, complex topics for non-experts, simplifying dense material</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-tone">Tone / depth</span>
+      <span class="position">Anywhere</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="tone">
+    <div style="flex:1">
+      <div class="code">Be direct / No hedging</div>
+      <div class="title">Confidence mode</div>
+      <div class="desc">Removes unnecessary caveats, qualifiers, and softening language. Claude gives a clear answer instead of padding with "it depends" and "some might say."</div>
+      <div class="example">Best for: when you need a decisive recommendation, not a balanced overview</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-tone">Tone / depth</span>
+      <span class="position">Anywhere</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="tone">
+    <div style="flex:1">
+      <div class="code">You are a [role]</div>
+      <div class="title">Persona / role assignment</div>
+      <div class="desc">Frames Claude's perspective through a specific expert lens — VC analyst, pharmacist, seasoned coach. Shapes both tone and the knowledge base it draws from.</div>
+      <div class="example">"You are a seasoned Series B investor reviewing this pitch deck."</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-tone">Tone / depth</span>
+      <span class="position">Start of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="output">
+    <div style="flex:1">
+      <div class="code">Respond only in [format]</div>
+      <div class="title">Format constraint</div>
+      <div class="desc">Hard constraints on output structure. JSON, bullet points, numbered list, table, one sentence, etc. Prevents Claude from choosing its own format.</div>
+      <div class="example">"Respond only in a JSON object with keys: recommendation, rationale, risk_level"</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-output">Output format</span>
+      <span class="position">End of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="output">
+    <div style="flex:1">
+      <div class="code">Give me 3 options</div>
+      <div class="title">Multiple alternatives</div>
+      <div class="desc">Forces Claude to generate more than one answer. Useful when you want range and variety rather than a single "best" answer.</div>
+      <div class="example">"Give me 3 versions: aggressive, neutral, and conservative"</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-output">Output format</span>
+      <span class="position">Anywhere</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="output">
+    <div style="flex:1">
+      <div class="code">No fluff / Bottom line first</div>
+      <div class="title">Brevity constraint</div>
+      <div class="desc">Cuts preamble, summaries, and padding. Claude leads with the answer, not a wind-up. Useful when you already have context and just need the output.</div>
+      <div class="example">Best for: quick answers, high-volume use, when you're time-constrained</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-output">Output format</span>
+      <span class="position">Anywhere</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="output">
+    <div style="flex:1">
+      <div class="code">Use XML tags</div>
+      <div class="title">Structured output via XML</div>
+      <div class="desc">Tells Claude to wrap output sections in XML tags like &lt;analysis&gt; &lt;recommendation&gt; etc. Makes parsing and extracting specific sections easy, especially in automation.</div>
+      <div class="example">"Return your answer with &lt;summary&gt; and &lt;action_items&gt; tags"</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-output">Output format</span>
+      <span class="position">End of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="placement">
+    <div style="flex:1">
+      <div class="code">[Artifact] at end of prompt</div>
+      <div class="title">Artifact context injection</div>
+      <div class="desc">Attach an existing artifact to the end of your message so Claude has direct access to the content — no copy/paste needed. Enables clean iterative editing.</div>
+      <div class="example">Best for: revising documents, extending code, reformatting existing work</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-placement">Placement</span>
+      <span class="position">End of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="reasoning">
+    <div style="flex:1">
+      <div class="code">Steel man this</div>
+      <div class="title">Best-case argument mode</div>
+      <div class="desc">Tells Claude to make the strongest possible case for a position — including ones it disagrees with. Opposite of a straw man. Great for debate prep or stress-testing ideas.</div>
+      <div class="example">Best for: testing your pitch, anticipating objections, exploring positions you're skeptical of</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-reasoning">Reasoning</span>
+      <span class="position">Start of prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="reasoning">
+    <div style="flex:1">
+      <div class="code">What am I missing?</div>
+      <div class="title">Blind spot scan</div>
+      <div class="desc">After getting an answer, asking this surfaces assumptions, risks, and perspectives Claude held back. One of the most underused follow-up prompts.</div>
+      <div class="example">Best for: strategic decisions, pitches, plans where you may have tunnel vision</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-reasoning">Reasoning</span>
+      <span class="position">Follow-up prompt</span>
+    </div>
+  </div>
+
+  <div class="card" data-cat="tone">
+    <div style="flex:1">
+      <div class="code">Assume I know [domain]</div>
+      <div class="title">Knowledge assumption</div>
+      <div class="desc">Skips foundational explanations for a domain you already know. More targeted than L99 — sets expertise level for a specific field without going max on everything.</div>
+      <div class="example">"Assume I know adult learning theory and instructional design basics."</div>
+      <div class="reliability"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+    </div>
+    <div class="meta">
+      <span class="tag tag-tone">Tone / depth</span>
+      <span class="position">Start of prompt</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="empty" id="empty">No modifiers in this category yet.</div>
+
+<div style="padding: 1rem 1.5rem; border-top: 0.5px solid var(--color-border-tertiary);">
+  <p style="font-size: 12px; color: var(--color-text-tertiary);">Reliability dots = consistency across uses (1 low → 5 high). These are prompt conventions, not hard-coded commands.</p>
+</div>
+
+<script>
+function filter(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(c => {
+    const show = cat === 'all' || c.dataset.cat === cat;
+    c.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('empty').style.display = visible === 0 ? 'block' : 'none';
+}
+</script>
