@@ -128,6 +128,12 @@
     background: rgba(127,119,221,0.06);
   }
 
+  .tag-stellantis {
+    color: #EF9F27;
+    border-color: rgba(239,159,39,0.3);
+    background: rgba(239,159,39,0.06);
+  }
+
   .section-line {
     flex: 1;
     height: 1px;
@@ -178,6 +184,18 @@
 
   .card.marketing::before {
     background: #7F77DD;
+  }
+
+  .card.stellantis:hover {
+    border-color: rgba(239,159,39,0.4);
+  }
+
+  .card.stellantis::before {
+    background: #EF9F27;
+  }
+
+  .card.stellantis:hover .card-arrow {
+    color: #EF9F27;
   }
 
   .card-type {
@@ -338,6 +356,23 @@
         <div class="card-type">Social</div>
         <div class="card-name">LinkedIn Flyer</div>
         <div class="card-desc">Professional network creative</div>
+        <span class="card-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag tag-stellantis">Stellantis</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid">
+
+      <a href="jeep_walkaround_field_guide.html" class="card stellantis">
+        <div class="card-type">Field Guide</div>
+        <div class="card-name">Jeep Walkaround Field Guide</div>
+        <div class="card-desc">Dealership walkaround training resource</div>
         <span class="card-arrow">↗</span>
       </a>
 
