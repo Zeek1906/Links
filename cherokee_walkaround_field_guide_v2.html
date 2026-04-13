@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Jeep Cherokee — Walkaround Field Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Source Sans 3',sans-serif;background:#f0ede6;color:#1a1a1a;line-height:1.6;font-size:15px}
+  header{background:#1a1a1a;padding:28px 40px 24px;border-bottom:4px solid #c8a84b}
+  header .brand{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:3px;color:#c8a84b;text-transform:uppercase;margin-bottom:8px}
+  header h1{font-family:'Oswald',sans-serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1}
+  header .meta{font-size:13px;color:#888;margin-top:8px}
+  header .badge{display:inline-block;background:#c0392b;color:#fff;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:2px;margin-left:10px;vertical-align:middle;position:relative;top:-2px}
+  .wrap{max-width:900px;margin:0 auto;padding:30px 20px}
+  .vehicle-label{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;color:#888;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  .vehicle-label::after{content:'';flex:1;height:1px;background:#ccc}
+  .stop{background:#fff;border:1px solid #ddd;border-radius:3px;margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .stop-header{background:#1a1a1a;display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;user-select:none;transition:background .15s}
+  .stop-header:hover{background:#2a2a2a}
+  .stop-num{background:#c8a84b;color:#1a1a1a;font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .stop-info{flex:1}
+  .stop-title{font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:#fff;letter-spacing:.5px}
+  .stop-pos{font-size:12px;color:#888;font-style:italic;margin-top:1px}
+  .chevron{color:#c8a84b;font-size:16px;transition:transform .25s}
+  .chevron.open{transform:rotate(180deg)}
+  .stop-body{display:none;padding:22px 24px;border-top:2px solid #c8a84b}
+  .stop-body.open{display:block}
+  .section-lbl{font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#c8a84b;margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid #eee}
+  .section-lbl:first-child{margin-top:0}
+  .talk{background:#f7f4ee;border-left:3px solid #c8a84b;padding:13px 16px;margin:10px 0;border-radius:0 3px 3px 0;font-style:italic;color:#333;font-size:14px;line-height:1.65}
+  .talk b{font-style:normal;color:#1a1a1a}
+  .trainer{background:#fffbee;border:1px solid #e8d080;border-radius:3px;padding:11px 14px;margin:12px 0;font-size:13px;color:#5a4800}
+  .trainer b{color:#3a3000}
+  .objection{background:#fff6f5;border:1px solid #e8b0a8;border-radius:3px;padding:12px 14px;margin:10px 0}
+  .obj-q{font-weight:600;color:#c0392b;font-size:13px;letter-spacing:.2px;margin-bottom:5px}
+  .obj-a{font-size:14px;color:#444}
+  .new-info{background:#f5f9ff;border-left:3px solid #3a7bd5;padding:12px 14px;margin:10px 0;border-radius:0 3px 3px 0;font-size:14px;color:#333}
+  .new-info .lbl{font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:#3a7bd5;text-transform:uppercase;margin-bottom:5px}
+  .comp{background:#f4fbf4;border-left:3px solid #2d6a2d;padding:12px 14px;margin:10px 0;border-radius:0 3px 3px 0;font-size:14px;color:#333}
+  .comp .lbl{font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:#2d6a2d;text-transform:uppercase;margin-bottom:5px}
+  .so-what{background:#1a1a1a;color:#fff;padding:14px 18px;border-radius:3px;margin-top:18px;font-size:14px;line-height:1.65}
+  .so-what .lbl{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;color:#c8a84b;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  .pills{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+  .pill{background:#1a1a1a;color:#fff;font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;padding:4px 11px;border-radius:2px;letter-spacing:.5px}
+  .pill.gold{background:#c8a84b;color:#1a1a1a}
+  .pill.red{background:#c0392b}
+  ul.bul{padding-left:18px;margin:8px 0}
+  ul.bul li{margin-bottom:5px;font-size:14px;color:#444}
+  .trim-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+  .trim-card{border:1px solid #ddd;border-radius:3px;padding:10px 12px;background:#f7f4ee}
+  .trim-name{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+  .trim-feat{font-size:12px;color:#666;line-height:1.5}
+  hr.div{border:none;border-top:1px solid #eee;margin:14px 0}
+  p.body{font-size:14px;color:#444;margin-bottom:10px;line-height:1.65}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Stellantis Performance Institute · Spring Training Tour 2026</div>
+  <h1>2026 Jeep Cherokee <span class="badge">Field Guide</span></h1>
+  <div class="meta">Primary Vehicle · Mixed Audience: Sales Consultants + Managers · Updated with additional walkaround content</div>
+</header>
+
+<div class="wrap">
+<div class="vehicle-label">Field Guide — Primary Vehicle</div>
+
+<!-- STOP 1 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">1</div>
+    <div class="stop-info">
+      <div class="stop-title">Front Fascia</div>
+      <div class="stop-pos">Standing at the front of the vehicle</div>
+    </div>
+    <div class="chevron open">▼</div>
+  </div>
+  <div class="stop-body open">
+    <div class="section-lbl">Heritage Hook</div>
+    <div class="talk">"The first thing you'll notice is that Jeep went back to its roots. That upright boxy stance, those trapezoidal wheel arches — those are direct callbacks to the 1984 XJ Cherokee. They didn't just bring back a name, they brought back the DNA."</div>
+
+    <div class="section-lbl">Seven-Slot Grille</div>
+    <div class="talk">"The seven-slot grille is gloss black on this trim with integrated silver Jeep branding. That small nozzle on the grille? That's a front camera washer — exclusive to the Overland. It keeps your 360-degree surround view clean even on a trail or in a car wash. That detail alone tells a customer which trim they're looking at from 20 feet away."</div>
+
+    <div class="section-lbl">U-Shaped LED DRLs</div>
+    <div class="talk">"Those U-shaped LED daytime running lights are the new signature. You'll recognize a Cherokee from a block away. Full LED reflector headlamps, integrated fog lights — production premium, not a concept trim. And LEDs mean no bulb replacements for the life of the vehicle."</div>
+
+    <div class="new-info"><div class="lbl">Also mention at this position</div>Pedestrian and cyclist automatic emergency braking is standard. Most customers assume AEB only detects other vehicles — it detects people. Important conversation for city drivers and families.</div>
+
+    <div class="new-info"><div class="lbl">Rain-sensing wipers</div>Wipers respond automatically to moisture. No button, no dial. Small detail that reads as premium the first time it rains on a demo drive — worth flagging before the drive.</div>
+
+    <div class="pills">
+      <div class="pill">8.1" ground clearance</div>
+      <div class="pill">187.9" length</div>
+      <div class="pill">74.7" width</div>
+      <div class="pill gold">STLA Large platform</div>
+    </div>
+
+    <div class="so-what"><div class="lbl">So What</div>Design sells emotion before a single spec lands. The XJ callback gives enthusiasts a reason and family buyers an identity. Let this stop do the feeling work before you start the rational pitch.</div>
+    <div class="trainer"><b>Trainer note:</b> Don't dump all specs at once. Pick one or two and move on — the numbers support the story, they don't replace it.</div>
+  </div>
+</div>
+
+<!-- STOP 2 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">2</div>
+    <div class="stop-info">
+      <div class="stop-title">Hood / Engine Bay</div>
+      <div class="stop-pos">Hood open, standing driver's side</div>
+    </div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="stop-body">
+    <div class="section-lbl">The Engine Story — Preempt the Objection First</div>
+    <div class="talk">"Under the hood is a 1.6-liter turbocharged hybrid — and before anybody says 'that sounds small for a Jeep,' let me reframe that. This is a third-generation EP6 engine, known as the Prince engine, originally developed in Europe and proven across millions of miles on Peugeot, Citroën and other Stellantis brands worldwide. It has won eight International Engine of the Year awards in its category. This is not a new experiment — it's a globally proven platform, localized for the Cherokee."</div>
+
+    <div class="section-lbl">What Makes This Engine Different</div>
+    <ul class="bul">
+      <li><b>All-aluminum construction</b> — reduces weight without sacrificing durability</li>
+      <li><b>Variable-geometry turbine turbo</b> — significantly reduces turbo lag; big deal for customers who've owned turbos before</li>
+      <li><b>Central Direct Injection (CDI)</b> — fuel injected directly into the combustion chamber for more power and better efficiency</li>
+      <li><b>Hybrid Stop Start technology</b> — shuts engine at stops to save fuel, restarts instantly via Motor 1</li>
+    </ul>
+
+    <div class="section-lbl">The Hybrid System — Two Motors, One Battery</div>
+    <div class="talk">"This isn't just a gasoline engine with a small battery assist. There are two electric motor generators integrated into the transmission working alongside the engine. Motor 1 starts the engine and keeps the battery charged — it also harvests energy from the engine any time there's surplus power. Motor 2 actually helps drive the wheels and captures energy every time you lift off the gas or press the brake. The system is constantly recovering energy from two different sources at the same time."</div>
+
+    <div class="new-info"><div class="lbl">Key clarification for consultants</div>Regenerative braking kicks in two ways: when you apply the brake AND when you simply lift off the gas. Customers assume you have to press the brake pedal — correct this proactively. "You don't even have to press the brake. The moment you ease off the accelerator, the system starts recovering energy."</div>
+
+    <div class="section-lbl">Battery + Liquid Cooling</div>
+    <div class="talk">"The 1.03 kWh high-voltage battery is liquid cooled — most competitors are still running air-cooled systems. Liquid cooling means consistent performance in summer heat or hard driving, and significantly longer battery life over time. And you never plug it in — ever."</div>
+
+    <div class="section-lbl">Power Numbers</div>
+    <div class="talk">"Combined output is 210 horsepower and 230 lb-ft of torque. That torque hits immediately — the electric motor eliminates the hesitation you feel in a traditional turbo engine. No waiting to merge. No lag off the line."</div>
+
+    <div class="pills">
+      <div class="pill">210 HP combined</div>
+      <div class="pill">230 lb-ft torque</div>
+      <div class="pill">39 city / 35 hwy / 37 combined MPG</div>
+      <div class="pill gold">500+ mile total range</div>
+      <div class="pill">87 octane regular</div>
+      <div class="pill">1.03 kWh battery</div>
+    </div>
+
+    <div class="section-lbl">Transmission — Address the CVT Question</div>
+    <div class="talk">"Unlike many hybrid competitors that use a belt-and-pulley CVT, the Cherokee uses a planetary gearset transmission. It drives like a conventional automatic — familiar, linear feel. No CVT drone, no rubberbanding. Customers who've hated CVTs will notice the difference on the test drive."</div>
+
+    <div class="comp"><div class="lbl">Competitive context</div>RAV4 Hybrid and CR-V Hybrid use e-CVT systems. Cherokee's planetary gearset is a meaningful technology differentiation — worth naming if a customer has driven either competitor.</div>
+
+    <div class="objection">
+      <div class="obj-q">"That engine sounds small for a Jeep."</div>
+      <div class="obj-a">"Third-generation EP6 — eight Engine of the Year awards, millions of miles proven globally. 210 horsepower, 230 lb-ft of torque hitting instantly because the electric motor eliminates lag. It outperforms what most customers expect the moment they drive it."</div>
+    </div>
+    <div class="objection">
+      <div class="obj-q">"Do I have to plug it in?"</div>
+      <div class="obj-a">"Never. The system charges itself two ways — every time you lift off the gas and every time you brake. Park anywhere, garage anywhere. Zero charging infrastructure needed."</div>
+    </div>
+    <div class="objection">
+      <div class="obj-q">"What about long-term reliability?"</div>
+      <div class="obj-a">"Third-generation engine with millions of miles of real-world proof across Europe. Liquid-cooled battery — most competitors use air cooling. This platform was engineered for longevity, not just launch specs."</div>
+    </div>
+
+    <div class="so-what"><div class="lbl">So What</div>Preempt the "small engine" objection here before it reaches the desk. Third-gen, globally proven, liquid-cooled, planetary gearset — those four points close the anxiety loop. Don't leave this stop without addressing the CVT question proactively.</div>
+    <div class="trainer"><b>Trainer note:</b> Watch for consultants who skip the Motor 1 / Motor 2 explanation. That's the most memorable powertrain story in the segment — coach them to use it. The "two energy recovery sources" framing is a genuine differentiator customers can repeat to their spouse.</div>
+  </div>
+</div>
+
+<!-- STOP 3 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">3</div>
+    <div class="stop-info">
+      <div class="stop-title">Driver's Side Profile</div>
+      <div class="stop-pos">Standing mid-vehicle, driver's side</div>
+    </div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="stop-body">
+    <div class="section-lbl">Size Story — Conquest Stop</div>
+    <div class="talk">"Step back and look at the profile. This Cherokee is about 188 inches long — and that extra length over competitors all went into the wheelbase. That's the number that creates rear legroom. You'll feel that when we get inside."</div>
+
+    <div class="section-lbl">Ground Clearance + Approach Angle</div>
+    <div class="talk">"Notice the ride height — 8.1 inches of ground clearance. But the number that really tells the capability story is the approach angle: 19.2 degrees. That's the steepest incline the front of this vehicle can climb without the bumper making contact with the ground."</div>
+
+    <div class="new-info"><div class="lbl">For new consultants — explain the angles</div>Approach angle is how steep of an incline the front of the vehicle can climb without scraping. Departure angle (at the rear) is the same concept leaving an obstacle. Cherokee's 19.2° approach and 31.4° departure are best-in-class — it can handle terrain the RAV4 and CR-V physically cannot. For customers who never plan to off-road: "Those numbers tell you this vehicle was engineered with real capability — not just designed to look rugged."</div>
+
+    <div class="section-lbl">Ramp Breakover Angle</div>
+    <p class="body">The ramp breakover angle is 19.4° — this is the measurement of how high of a crest or ridge the vehicle can clear without the underside making contact. Three angles working together: approach, breakover, departure. Cherokee's geometry is class-leading across all three.</p>
+
+    <div class="section-lbl">Water Fording</div>
+    <div class="talk">"Cherokee can ford up to 20 inches of water at 5 mph. For context, that's deeper than most low-water crossings on popular trail systems. This is a legitimate go-anywhere vehicle."</div>
+
+    <div class="section-lbl">Selec-Terrain — 4 Modes</div>
+    <div class="talk">"That toggle dial you'll see inside is the Selec-Terrain system — four modes: Auto, Sport, Snow, and Sand/Mud. Each one adjusts throttle response, transmission behavior, and traction control calibration for the conditions. The system does the thinking so the driver doesn't have to. Auto is the default for everyday driving — Snow and Sand/Mud are there when you need them."</div>
+
+    <div class="new-info"><div class="lbl">Jeep Active Drive I 4x4</div>Front-wheel drive is the default for fuel efficiency. The rear axle engages automatically when traction is needed via the automatic 1-speed PTU (power transfer unit). Fully seamless — no driver input required. Also features a rear axle disconnect that re-engages instantly when conditions call for it, helping maintain balanced torque distribution and brake traction control.</div>
+
+    <div class="section-lbl">Wheels + Body Details</div>
+    <div class="talk">"On the Overland you're getting 20-inch two-tone machine-finished alloy wheels. Notice the lower moldings and wheel arch flares are body-color — not matte plastic like you'd see on base trims. That's the detail that separates this truck visually from 40 feet away."</div>
+
+    <div class="pills">
+      <div class="pill">19.2° approach angle</div>
+      <div class="pill">31.4° departure angle</div>
+      <div class="pill">19.4° ramp breakover</div>
+      <div class="pill">20" water fording</div>
+      <div class="pill gold">Best-in-class angles</div>
+    </div>
+
+    <div class="comp"><div class="lbl">Competitive context</div>RAV4 Hybrid and CR-V Hybrid are not designed for trail use — their approach and departure angles don't come close. Even for customers who never off-road, this is a confidence play: Cherokee goes places the competition can't.</div>
+
+    <div class="so-what"><div class="lbl">So What</div>This is your capability conquest stop. Size, clearance, approach/departure angles, water fording, and Selec-Terrain — this is where you earn the "true Jeep" credibility for a vehicle that's also a hybrid. Don't skip the angle explanation for new consultants or customers.</div>
+    <div class="trainer"><b>Trainer note:</b> New consultants will skip the angle numbers — they don't know what they mean. Coach them to physically point to where the measurement is taken on the vehicle. Showing beats saying.</div>
+  </div>
+</div>
+
+<!-- STOP 4 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">4</div>
+    <div class="stop-info">
+      <div class="stop-title">Rear / Cargo</div>
+      <div class="stop-pos">Standing at the rear, liftgate open</div>
+    </div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="stop-body">
+    <div class="section-lbl">Departure Angle — Callback from Stop 3</div>
+    <div class="talk">"Before we open the liftgate — look at the rear geometry. That 31.4-degree departure angle means this vehicle can clear a drop-off on exit that most compact SUVs would scrape on. And that full-size spare under the floor? Most hybrid competitors sacrifice the spare for battery packaging. Cherokee kept it."</div>
+
+    <div class="section-lbl">Taillights</div>
+    <div class="talk">"Rectangular LED taillights — clean, modern, high-visibility. The LED array is part of the same premium lighting package running front to back."</div>
+
+    <div class="section-lbl">Liftgate</div>
+    <div class="talk">"Power liftgate with a hands-free kick sensor — when your hands are full, kick under the bumper and it opens. On the Overland, the liftgate height is adjustable so it clears a low garage ceiling. That 3-second delay before close keeps people from getting caught."</div>
+
+    <div class="new-info"><div class="lbl">Trim note — power liftgate availability</div>Power liftgate with adjustable height is standard on Limited with Tech Group and Overland. The foot-activated version is standard on Overland. Use it as a demonstration moment — ask the customer about their lifestyle before you demo it.</div>
+
+    <div class="section-lbl">Cargo Space</div>
+    <div class="talk">"33.6 cubic feet with seats up. 68.3 cubic feet with the second row folded flat. That's about a 30 percent improvement over the previous generation. And the load floor is completely flat — no hump, no awkward step loading heavy items."</div>
+
+    <div class="section-lbl">Towing</div>
+    <div class="talk">"Standard tow rating is 3,500 pounds — best-in-class for compact hybrids. That's enough for a small boat, jet ski trailer, a camper, or a couple of ATVs. The Trailer Tow Group adds the hitch receiver, wiring harness, and trailer sway control — that's what unlocks the full 3,500 lb capacity."</div>
+
+    <div class="new-info"><div class="lbl">Trailer Tow Group — what's included</div>Class III receiver hitch, 7 and 4 pin wiring harness, Trailer Hitch View with zoom, Trailer Blind Spot Detection, and compact spare. Available on all trims except Sport.</div>
+
+    <div class="section-lbl">Safety Features at Rear Position</div>
+    <div class="talk">"Cherokee offers 140 standard and available safety and security features. A few worth calling out here: ParkView rear backup camera, Rear Park Assist, Rear Cross-Path Detection, and Blind Spot Monitoring with Turn Signal activation. The full safety suite is one of the most comprehensive in this segment."</div>
+
+    <div class="pills">
+      <div class="pill">33.6 cu ft seats up</div>
+      <div class="pill">68.3 cu ft seats down</div>
+      <div class="pill">3,500 lb towing</div>
+      <div class="pill gold">Full-size spare</div>
+      <div class="pill">140 safety features</div>
+    </div>
+
+    <div class="comp"><div class="lbl">Competitive context</div>RAV4 Hybrid tops out around 1,750 lbs towing. CR-V Hybrid is similarly limited. Cherokee more than doubles the segment average — and keeps the full-size spare that most hybrid competitors sacrifice for battery packaging.</div>
+
+    <div class="objection">
+      <div class="obj-q">"Does it really tow enough for a boat/camper?"</div>
+      <div class="obj-a">"3,500 pounds covers a small boat, jet ski trailer, teardrop camper, or two ATVs. If they need more, it's worth a conversation about a Grand Cherokee — but for most weekend use cases, Cherokee handles it."</div>
+    </div>
+
+    <div class="so-what"><div class="lbl">So What</div>Full-size spare plus best-in-class towing is a one-two punch no compact hybrid competitor can match. This stop wins the utility argument. Don't rush it — and always ask what they tow before you quote the number.</div>
+    <div class="trainer"><b>Trainer note:</b> The foot-activated liftgate is a high-impact demo moment. Coach consultants to ask a lifestyle question first — "Do you do a lot of grocery runs? Hardware store trips? Travel sports?" — then demonstrate it. Engagement questions make the feature personal.</div>
+  </div>
+</div>
+
+<!-- STOP 5 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">5</div>
+    <div class="stop-info">
+      <div class="stop-title">Passenger Side</div>
+      <div class="stop-pos">Standing mid-vehicle, passenger's side</div>
+    </div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="stop-body">
+    <div class="section-lbl">Body Design Language</div>
+    <div class="talk">"From this side you get the full profile story. Black body cladding and fender flares give it a planted, rugged stance — that's not just styling. It protects the lower body panels on trails and parking lots. This is a vehicle designed to be used."</div>
+
+    <div class="section-lbl">Fuel Door</div>
+    <p class="body">Regular 87-octane unleaded. Mention this proactively — customers coming from premium-fuel vehicles appreciate it immediately. Total cost of ownership conversation starter.</p>
+
+    <div class="section-lbl">Safety Suite — Passenger Side Position</div>
+    <div class="talk">"Blind Spot Monitoring with Rear Cross-Path Detection is active on this side too. The system alerts you any time a vehicle enters your blind zone — and it activates the turn signal indicator if you signal while a vehicle is detected. That's not just convenience, that's an accident prevention system."</div>
+
+    <div class="new-info"><div class="lbl">Also at this position</div>Heated side mirrors are standard on Limited and above. The signal mirror feature — courtesy lighting that illuminates the ground when you unlock — is a small premium detail worth pointing out on upper trims.</div>
+
+    <div class="section-lbl">Jeep Wave — Mention Here</div>
+    <div class="talk">"Every Cherokee comes with Jeep Wave membership standard. Exclusive owner support, complementary maintenance services, trip interruption coverage, and VIP treatment at Jeep-branded events. It's the ownership experience, not just the vehicle."</div>
+
+    <div class="pills">
+      <div class="pill">87 octane regular</div>
+      <div class="pill gold">Jeep Wave standard all trims</div>
+      <div class="pill">Blind spot monitoring std.</div>
+    </div>
+
+    <div class="so-what"><div class="lbl">So What</div>This stop is your cost-of-ownership bridge. 87 octane, Jeep Wave coverage, and a safety suite that's more comprehensive than competitors at this price point. Keep it conversational — this is the relationship-building side of the walkaround.</div>
+  </div>
+</div>
+
+<!-- STOP 6 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">6</div>
+    <div class="stop-info">
+      <div class="stop-title">Rear Seat</div>
+      <div class="stop-pos">Rear passenger door open, customer seated</div>
+    </div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="stop-body">
+    <div class="section-lbl">Put Them in the Seat</div>
+    <div class="talk">"Go ahead and sit back. Notice the legroom. This is where that extra wheelbase actually lives — it all came here. If you've sat in the back of a RAV4 on a longer drive and felt cramped, you're going to notice the difference immediately."</div>
+
+    <div class="new-info"><div class="lbl">Class-exclusive rear hip room</div>Cherokee offers unsurpassed rear hip room in its class — this is a class-exclusive claim. Shoulder-to-shoulder comfort for three adults in back is genuinely better than both RAV4 and CR-V. When customers have families, this closes.</div>
+
+    <div class="section-lbl">Materials — Overland</div>
+    <div class="talk">"The Overland is upholstered in Capri faux leatherette with honeycomb perforations and contrast stitching. It wipes clean, it's durable, and frankly it's getting hard to tell from real leather unless someone points it out. Jeep made this call for sustainability and durability — right choice for families."</div>
+
+    <div class="section-lbl">Rear Climate + Connectivity</div>
+    <ul class="bul">
+      <li>Rear climate vents — second-row passengers control their own airflow</li>
+      <li>USB-C ports throughout the cabin — rear passengers stay charged</li>
+      <li>Second-row USB ports standard on Laredo and above</li>
+    </ul>
+
+    <div class="section-lbl">Cabin Quiet — Undersold Feature</div>
+    <div class="talk">"One thing worth mentioning before the demo drive: this cabin is significantly quieter than the outgoing model. Acoustic laminated windshield filters wind noise. Active Noise Cancellation uses the audio system to offset engine and exhaust frequencies — works even when the radio is off. And the Acoustic Vehicle Alerting System alerts pedestrians outside while staying nearly silent inside. Set that expectation now — customers notice it the moment they pull out of the lot."</div>
+
+    <div class="section-lbl">Panoramic Sunroof</div>
+    <div class="talk">"That glass overhead is the panoramic sunroof — it nearly doubles the open feel of the cabin. On the Overland it's standard. From the rear seat it's especially noticeable — the cabin feels much larger than the footprint suggests."</div>
+
+    <div class="so-what"><div class="lbl">So What</div>Put the customer in the seat and let them feel it. Unsurpassed rear hip room, quiet cabin, USB-C connectivity — this stop is where the size story becomes personal. Thirty seconds of silence after they sit is worth more than two minutes of talking.</div>
+    <div class="trainer"><b>Trainer note:</b> New consultants rush this stop. Coach them to ask the customer to sit, then stop talking for a beat. Let the rear seat sell itself before jumping to the next feature.</div>
+  </div>
+</div>
+
+<!-- STOP 7 -->
+<div class="stop">
+  <div class="stop-header" onclick="tog(this)">
+    <div class="stop-num">7</div>
+    <div class="stop-info">
+      <div class="stop-title">Driver's Seat / Tech Stack</div>
+      <div class="stop-pos">Customer in driver's seat — close stop</div>
+    </div>
+    <div class="chevron">▼</div>
+  </div>
+  <div class="stop-body">
+    <div class="section-lbl">Steering Wheel + Cluster</div>
+    <div class="talk">"First thing you'll feel is the steering wheel — performance-inspired design with a premium leather wrap. The flat top and bottom give you a clean line of sight straight into the 10.25-inch fully digital instrument cluster. Speed, navigation, and the hybrid power flow display are all right in your eyeline."</div>
+
+    <div class="new-info"><div class="lbl">Hybrid power flow display</div>The digital cluster includes a real-time hybrid power flow display — shows customers visually when the electric motors are working, when the engine is charging the battery, and when regenerative braking is recovering energy. Demo this during the test drive. It makes the powertrain story tangible.</div>
+
+    <div class="section-lbl">Uconnect 5 — 12.3-inch</div>
+    <div class="talk">"The 12.3-inch Uconnect 5 screen has wireless Apple CarPlay and Android Auto, Alexa built in, and over-the-air update capability. Notice the physical hard buttons for defrost and AC — Jeep brought those back because they listened. Nobody wants to hunt through a touchscreen to defrost a windshield at 6am."</div>
+
+    <div class="section-lbl">Rotary Shifter + Wireless Charging</div>
+    <div class="talk">"The rotary gear selector on the console — tactile, premium feel. Wireless charging pad with pressure tongs to keep the phone from sliding during turns. Small thing, meaningful on a daily basis."</div>
+
+    <div class="section-lbl">Active Driving Assist — Level 2 Standard</div>
+    <div class="talk">"Active Driving Assist is Level 2 — adaptive cruise control combined with lane centering — standard across all trims. Hands-on, eyes-on, but it handles micro-corrections on the highway. On a RAV4 you're often paying extra for this. Here it comes on every Cherokee off the truck."</div>
+
+    <div class="new-info"><div class="lbl">Level 2 vs Level 2+ clarification</div>Level 2 Active Driver Assist is standard across all trims — assists with steering and speed but driver must remain engaged. Level 2+ Hands-Free Active Driver Assist is available at higher trim or package level. Know the difference — customers will ask.</div>
+
+    <div class="section-lbl">Full Safety Suite — Inside Callouts</div>
+    <ul class="bul">
+      <li>Forward Collision Warning with Active Emergency Braking</li>
+      <li>Traffic Sign Information — reads and displays posted speed limits</li>
+      <li>Intersection Collision Assist — detects vehicles approaching from left/right at crossroads</li>
+      <li>Drowsy Driver Detection</li>
+      <li>High Speed Overtake Warning</li>
+      <li>Digital Rearview Mirror (available — camera-fed, fully unobstructed rear view)</li>
+    </ul>
+
+    <div class="section-lbl">Trim Ladder — Quick Reference</div>
+    <div class="trim-row">
+      <div class="trim-card"><div class="trim-name">Laredo</div><div class="trim-feat">Base · cloth seats · heated seats · 2nd row USB</div></div>
+      <div class="trim-card"><div class="trim-name">Limited</div><div class="trim-feat">Heated steering wheel · power liftgate · wireless charging · security alarm</div></div>
+      <div class="trim-card"><div class="trim-name">Overland</div><div class="trim-feat">20" wheels · Capri leatherette · 12.3" nav · Alpine audio · Alexa · 115V outlet</div></div>
+      <div class="trim-card"><div class="trim-name">Elite Group</div><div class="trim-feat">360° cam · digital rearview mirror · ventilated seats · front/rear cam washer · autonomous park assist</div></div>
+    </div>
+
+    <div class="section-lbl">Ambient Lighting + Active Noise Control</div>
+    <p class="body">Ambient lighting and Active Noise Cancellation work together to create a cabin experience that punches well above the price point. Frame it before the demo drive so customers know what to feel for.</p>
+
+    <div class="pills">
+      <div class="pill">12.3" Uconnect 5</div>
+      <div class="pill">10.25" digital cluster</div>
+      <div class="pill gold">Level 2 ADAS standard</div>
+      <div class="pill">Wireless CarPlay/AA</div>
+      <div class="pill">140 safety features</div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-q">"How does this compare to the RAV4 Hybrid?"</div>
+      <div class="obj-a">"RAV4 Hybrid is a strong vehicle — but Cherokee has best-in-class approach and departure angles, more than double the towing capacity, a planetary gearset instead of CVT, Level 2 ADAS standard on every trim, and unsurpassed rear hip room. In most cases Cherokee wins on capability and value — RAV4 wins on brand familiarity. If your customer can get past the name recognition, the data favors Cherokee."</div>
+    </div>
+    <div class="objection">
+      <div class="obj-q">"Is the hybrid system complicated to own?"</div>
+      <div class="obj-a">"Zero added maintenance. No charging, no charging stations, no special infrastructure. The hybrid system actually reduces brake wear because regenerative braking handles a lot of the deceleration. It's simpler to own than a traditional powertrain in some ways."</div>
+    </div>
+
+    <div class="so-what"><div class="lbl">So What</div>This is your close stop. Level 2 standard, 12.3-inch screen, physical HVAC controls, digital cluster with hybrid display, wireless CarPlay — the tech story is premium without the premium price. Land the value equation here before you walk to the desk.</div>
+    <div class="trainer"><b>Trainer note:</b> Coach consultants to demo the hybrid power flow display on the drive. When a customer sees the system recovering energy in real time, the powertrain anxiety disappears. The screen does the convincing.</div>
+  </div>
+</div>
+
+</div><!-- end wrap -->
+
+<script>
+function tog(header){
+  const body=header.nextElementSibling;
+  const arrow=header.querySelector('.chevron');
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  arrow.classList.toggle('open',!isOpen);
+}
+</script>
+</body>
+</html>
