@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT Setup Guides</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #212730;
+    --blue: #0074FF;
+    --gold: #FBBE01;
+    --green: #4FB96D;
+    --bg: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #f8f9ff;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(33,39,48,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+
+  .navbar {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 14px 28px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-logo-text { font-weight: 900; font-size: 17px; letter-spacing: 2px; color: var(--navy); }
+  .nav-tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--navy); background: rgba(33,39,48,0.06); border: 1px solid rgba(33,39,48,0.15); padding: 5px 12px; border-radius: 999px; text-transform: uppercase; }
+
+  .hero { background: linear-gradient(135deg, rgba(33,39,48,0.92) 0%, rgba(0,116,255,0.75) 100%), #212730; padding: 48px 28px 44px; text-align: center; }
+  .hero-tag { display: inline-block; background: var(--gold); color: #000; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; text-transform: uppercase; font-weight: 700; }
+  .hero h1 { font-size: 28px; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 10px; }
+  .hero h1 span { color: var(--gold); }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 480px; margin: 0 auto; }
+
+  .toc { max-width: 800px; margin: 32px auto 0; padding: 0 16px; }
+  .toc-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--navy); text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .toc-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--navy); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.15s; }
+  .toc-item:hover { border-color: var(--blue); background: #fff; color: var(--blue); }
+  .toc-num { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  .content { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+
+  .guide-card { background: #fff; border: 2px solid var(--border); border-radius: var(--radius); margin: 24px 0; box-shadow: var(--shadow); overflow: hidden; scroll-margin-top: 80px; }
+  .guide-header { background: var(--navy); padding: 18px 22px; display: flex; align-items: center; gap: 14px; }
+  .guide-num { background: var(--gold); color: #000; font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .guide-title { font-size: 16px; font-weight: 800; color: #fff; }
+  .guide-tag { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px; color: #000; background: var(--gold); padding: 3px 10px; border-radius: 999px; text-transform: uppercase; font-weight: 700; margin-left: auto; white-space: nowrap; }
+
+  .guide-body { padding: 22px; }
+
+  .what-box { background: rgba(0,116,255,0.05); border-left: 4px solid var(--blue); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 16px; }
+  .what-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--blue); text-transform: uppercase; font-weight: 700; margin-bottom: 5px; }
+  .what-box p { font-size: 13px; color: #444; line-height: 1.65; }
+
+  .steps-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--navy); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .steps-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .steps li { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: #444; line-height: 1.6; }
+  .sni { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+  .tip-box { background: #fff9e6; border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 16px; }
+  .tip-box strong { color: #92400e; font-size: 9px; font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 6px; background: var(--navy); color: #fff; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 999px; text-decoration: none; transition: background 0.15s; margin-top: 4px; }
+  .back-link:hover { background: #2e3740; }
+
+  .footer { text-align: center; padding: 28px 16px; border-top: 2px solid var(--border); margin-top: 32px; }
+  .footer-brand { font-weight: 900; font-size: 14px; letter-spacing: 3px; color: var(--navy); display: block; margin-bottom: 4px; }
+  .footer-gold-line { width: 50px; height: 3px; background: var(--gold); border-radius: 999px; margin: 8px auto; }
+  .footer-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+
+  @media (max-width: 600px) {
+    .navbar { padding: 12px 16px; }
+    .nav-tag { display: none; }
+    .hero { padding: 32px 16px 28px; }
+    .hero h1 { font-size: 22px; }
+    .content { padding: 0 12px; }
+    .toc { padding: 0 12px; }
+    .guide-body { padding: 16px; }
+    .guide-tag { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="nav-logo-text">RAYZIT</span>
+  <span class="nav-tag">Written Setup Guides</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Prefer to Read?</div>
+  <h1>Your RAYZIT Setup<br><span>Step by Step.</span></h1>
+  <p>Written guides for every step in your onboarding checklist. Follow along at your own pace.</p>
+</div>
+
+<div class="toc">
+  <div class="toc-label">Jump to a Step</div>
+  <div class="toc-grid">
+    <a href="#step1" class="toc-item"><span class="toc-num">1</span>Welcome & What You Need</a>
+    <a href="#step2" class="toc-item"><span class="toc-num">2</span>Create Your Login</a>
+    <a href="#step3" class="toc-item"><span class="toc-num">3</span>Connect Stripe</a>
+    <a href="#step4" class="toc-item"><span class="toc-num">4</span>Set Donation Limits</a>
+    <a href="#step5" class="toc-item"><span class="toc-num">5</span>Add a Welcome Video</a>
+    <a href="#step6" class="toc-item"><span class="toc-num">6</span>Create Your First Event</a>
+    <a href="#step7" class="toc-item"><span class="toc-num">7</span>Download Your QR Code</a>
+    <a href="#step8" class="toc-item"><span class="toc-num">8</span>You're Live — Launch!</a>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- STEP 1 -->
+<div class="guide-card" id="step1">
+  <div class="guide-header">
+    <div class="guide-num">1</div>
+    <div class="guide-title">Welcome from Beacon — Start Here</div>
+    <span class="guide-tag">Getting Started</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>Before you touch anything in your back office, this step makes sure you understand what RAYZIT is, how the platform works, and what you need to have ready. Starting without preparation is the most common reason people get stuck.</p>
+    </div>
+    <div class="steps-label">What You Need Before You Begin</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>Your organization's designated admin email address. This is the email you will use to log in to your RAYZIT back office every time. Choose one that will not change.</li>
+      <li><span class="sni">2</span>An active Stripe account for your organization. Stripe is the payment processor RAYZIT uses to move donations from your donors to your bank account. If you do not have one yet, go to stripe.com and create one before continuing. Stripe verification typically takes 1 to 2 business days.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>Do not skip ahead if your Stripe account is not ready. Without Stripe connected, no donations can process and you will have to come back to this before going live.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="guide-card" id="step2">
+  <div class="guide-header">
+    <div class="guide-num">2</div>
+    <div class="guide-title">Create Your Admin Username and Password</div>
+    <span class="guide-tag">Account Setup</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>This is how you and your team will log in to the RAYZIT back office going forward. Your back office is where you manage everything — donation settings, events, QR codes, brand settings, and donation history.</p>
+    </div>
+    <div class="steps-label">How to Create Your Login</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>Open the RAYZIT back office link that was sent to you in your welcome email.</li>
+      <li><span class="sni">2</span>Enter your organization's admin email address in the email field. Use the same email you identified in Step 1.</li>
+      <li><span class="sni">3</span>Create a secure password. Use something your team can remember but that is not easy to guess.</li>
+      <li><span class="sni">4</span>Confirm your password and submit. Your account is now created.</li>
+      <li><span class="sni">5</span>Write down or save your email and password somewhere safe. Your team may need access and a reset can delay your launch.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>We recommend training at least two people at your organization on the back office login. Single-contact accounts are the most common reason organizations lose momentum.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="guide-card" id="step3">
+  <div class="guide-header">
+    <div class="guide-num">3</div>
+    <div class="guide-title">Connect RAYZIT to Your Stripe Account</div>
+    <span class="guide-tag">Account Setup</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>Stripe is how donations reach your bank account. Until Stripe is connected, your RAYZIT page is live but no money can move. This is a required step before you can accept any donations.</p>
+    </div>
+    <div class="steps-label">How to Connect Stripe</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>Log in to your RAYZIT back office using the credentials you created in Step 2.</li>
+      <li><span class="sni">2</span>In the left side menu, tap or click <strong>Connect Stripe</strong>.</li>
+      <li><span class="sni">3</span>On the next screen, tap <strong>Connect Stripe Account</strong>.</li>
+      <li><span class="sni">4</span>You will be redirected to Stripe's website. Enter the email address associated with your organization's Stripe account and continue.</li>
+      <li><span class="sni">5</span>Follow Stripe's prompts to authorize the connection.</li>
+      <li><span class="sni">6</span>Once connected, return to your RAYZIT back office. The Stripe status indicator will change from red to confirmed green.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>If your Stripe account was recently created, it may still be in verification. The connection will work but donations will be held until Stripe completes your identity verification — usually 1 to 2 business days.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="guide-card" id="step4">
+  <div class="guide-header">
+    <div class="guide-num">4</div>
+    <div class="guide-title">Set Your Donation Limits</div>
+    <span class="guide-tag">Customize</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>RAYZIT supports three types of giving: Round-Up donations, Regular recurring donations, and One-Off single donations. This step lets you choose which types to offer and set the suggested amounts your donors will see when they give.</p>
+    </div>
+    <div class="steps-label">How to Set Your Donation Options</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>In your back office menu, tap <strong>Donation Settings</strong>.</li>
+      <li><span class="sni">2</span>For <strong>One-Off donations</strong>: Toggle the switch to on. Set four suggested amounts that make sense for your organization — for example $10, $15, $20, and $50.</li>
+      <li><span class="sni">3</span>For <strong>Regular (recurring) donations</strong>: Toggle the switch to on. Set your suggested monthly amounts. These are gifts donors commit to on a monthly basis.</li>
+      <li><span class="sni">4</span>For <strong>Round-Up donations</strong>: Toggle the switch to on. Set a minimum round-up amount. We recommend $2 as a starting minimum. Round-Up donations happen automatically every time a donor makes a purchase with their connected card.</li>
+      <li><span class="sni">5</span>Tap <strong>Save</strong> when you are done. Your donation options are now live on your giving page.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>Round-Up is the most powerful giving type on RAYZIT. Donors connect once and give passively every time they spend. Prioritize making sure this is turned on and set up correctly.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="guide-card" id="step5">
+  <div class="guide-header">
+    <div class="guide-num">5</div>
+    <div class="guide-title">Add a Personalized Video to Your Homepage</div>
+    <span class="guide-tag">Optional</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>Your RAYZIT homepage can display a YouTube video that plays automatically for anyone who visits your giving page. A short welcome message from your organization's leader creates personal connection with donors and significantly increases conversion.</p>
+    </div>
+    <div class="steps-label">How to Add Your Video</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>Upload your welcome video to YouTube. It does not need to be public — unlisted is fine.</li>
+      <li><span class="sni">2</span>Open the YouTube video and look at the URL in your browser. It will look something like this: youtube.com/watch?v=<strong>dQw4w9WgXcQ</strong>. The characters after <strong>v=</strong> are your Video ID.</li>
+      <li><span class="sni">3</span>Copy just those characters — nothing before or after them.</li>
+      <li><span class="sni">4</span>In your RAYZIT back office, tap <strong>Brand Settings</strong>.</li>
+      <li><span class="sni">5</span>Find the field labeled <strong>YouTube Video ID</strong> and paste your copied characters into it.</li>
+      <li><span class="sni">6</span>Tap <strong>Save</strong>. Your video will now appear on your giving page.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>Keep the video under 90 seconds. A leader saying who you are, what you do, and why it matters is all you need. You can always come back and update it later.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="guide-card" id="step6">
+  <div class="guide-header">
+    <div class="guide-num">6</div>
+    <div class="guide-title">Create Your First Event</div>
+    <span class="guide-tag">Activate</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>Events are targeted fundraising campaigns on RAYZIT. Creating an event gives donors a specific reason to give right now, tied to a name, image, goal, and date. Named campaigns convert significantly better than general giving pages because they create urgency and context.</p>
+    </div>
+    <div class="steps-label">How to Create an Event</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>In your back office menu, tap <strong>Events</strong>.</li>
+      <li><span class="sni">2</span>Tap <strong>Create New Event</strong>.</li>
+      <li><span class="sni">3</span>Enter your <strong>Event Name</strong>. Keep it clear and specific — for example "Spring Fundraiser 2026" or "Back to School Drive."</li>
+      <li><span class="sni">4</span>Add an <strong>Event Description</strong> that tells donors what their money supports.</li>
+      <li><span class="sni">5</span>Upload an <strong>Event Image</strong> that represents the campaign. This appears at the top of your event giving page.</li>
+      <li><span class="sni">6</span>Set your <strong>Donation Amounts</strong> for this specific event.</li>
+      <li><span class="sni">7</span>Set your <strong>Start Date</strong>.</li>
+      <li><span class="sni">8</span>Tap <strong>Create</strong>. Your event page is now live and ready to share.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>You do not need a physical event to create an Event in RAYZIT. A "Spring Campaign" or "Monthly Challenge" works just as well. The name gives donors a rallying point.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 7 -->
+<div class="guide-card" id="step7">
+  <div class="guide-header">
+    <div class="guide-num">7</div>
+    <div class="guide-title">Download Your QR Code</div>
+    <span class="guide-tag">Activate</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>Your RAYZIT QR code is a direct link to your donation page. Anyone who scans it with their phone is taken instantly to your giving options — no app download required, no login needed. This is one of your most powerful tools for in-person giving at events, meetings, and gatherings.</p>
+    </div>
+    <div class="steps-label">How to Download Your QR Code</div>
+    <ul class="steps">
+      <li><span class="sni">1</span>In your back office menu, tap <strong>Download QR Code</strong>.</li>
+      <li><span class="sni">2</span>Your QR code will download as a PNG image file to your device.</li>
+      <li><span class="sni">3</span>Print it and display it anywhere donors can see it — meeting rooms, event tables, presentation slides, bulletins, newsletters, and social media posts.</li>
+      <li><span class="sni">4</span>When a donor scans it, they are taken directly to your RAYZIT giving page with all your donation options ready.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>Your general QR code links to your main giving page. Your Event pages each have their own separate QR code. Use the general one for ongoing promotion and the event-specific one during active campaigns.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_onboarding_checklist.html" class="back-link">← Back to Checklist</a>
+  </div>
+</div>
+
+<!-- STEP 8 -->
+<div class="guide-card" id="step8">
+  <div class="guide-header">
+    <div class="guide-num">8</div>
+    <div class="guide-title">You're Now Live — Begin Your 7-Day Launch</div>
+    <span class="guide-tag">Final Step</span>
+  </div>
+  <div class="guide-body">
+    <div class="what-box">
+      <div class="what-label">What This Step Is For</div>
+      <p>Your RAYZIT account is fully set up and live. This final step transitions you from setup into activation. The 7-Day Launch is a structured outreach plan that gets your first donors connected in your first week. Organizations that follow the launch plan consistently outperform those that go live without one.</p>
+    </div>
+    <div class="steps-label">What Happens in Your 7-Day Launch</div>
+    <ul class="steps">
+      <li><span class="sni">1</span><strong>Day 0 — Inner Circle:</strong> Reach out to your most passionate supporters first. These are the people most likely to give immediately and help build early momentum before your public launch.</li>
+      <li><span class="sni">2</span><strong>Day 1 — Public Launch:</strong> Send your first public announcement with a clear call to action. Share your RAYZIT link and QR code broadly across email, text, and social media.</li>
+      <li><span class="sni">3</span><strong>Day 2 — SMS Follow-Up:</strong> Send a short direct text message to anyone who did not respond to Day 1. Keep it brief and action-focused.</li>
+      <li><span class="sni">4</span><strong>Days 3 through 7:</strong> Continue with daily touchpoints using the assets and templates provided in your 7-Day Launch guide. Each day has a specific action designed to build on the last.</li>
+    </ul>
+    <div class="tip-box"><strong>Tip</strong>The first 7 days set the tone for your entire RAYZIT experience. Organizations that launch with a plan generate donors in week one. Those that skip it often stay inactive. Do not skip the launch.</div>
+    <a href="https://zeek1906.github.io/Links/rayzit_launch.html" class="back-link" style="background:var(--gold);color:#000;">🚀 Begin Your 7-Day Launch</a>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="footer-brand">RAYZIT®</span>
+  <div class="footer-gold-line"></div>
+  <span class="footer-sub">Make a Change with Change</span>
+</div>
+
+</div>
+</body>
+</html>
