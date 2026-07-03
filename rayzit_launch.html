@@ -659,6 +659,7 @@
   <div class="stuck-form" id="stuckForm">
     <input type="text" placeholder="Your name" id="stuckName" />
     <input type="text" placeholder="Your organization name" id="stuckOrg" />
+    <input type="email" placeholder="Your email" id="stuckEmail" />
     <select id="stuckStep">
       <option value="">Where did you get stuck?</option>
       <option value="intro">Intro</option>
@@ -787,13 +788,27 @@
   function submitStuck() {
     const name = document.getElementById('stuckName').value.trim();
     const org = document.getElementById('stuckOrg').value.trim();
+    const email = document.getElementById('stuckEmail').value.trim();
     const step = document.getElementById('stuckStep').value;
-    if (!name || !org || !step) {
-      alert('Please fill in your name, organization, and where you got stuck.');
+    const note = document.getElementById('stuckNote').value.trim();
+    if (!name || !org || !email || !step) {
+      alert('Please fill in your name, organization, email, and where you got stuck.');
       return;
     }
-    document.getElementById('stuckForm').style.display = 'none';
-    document.getElementById('stuckSent').style.display = 'block';
+    const btn = document.getElementById('stuckSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    const payload = { name: name, organization: org, email: email, stuck_on: step, note: note || 'No additional details provided.', source: 'launch', submitted_at: new Date().toISOString() };
+    fetch('https://hook.us2.make.com/5p0ylt8hddjm6n0fc0yvjq2ka7dxgo5y', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(() => {
+        document.getElementById('stuckForm').style.display = 'none';
+        document.getElementById('stuckSent').style.display = 'block';
+      })
+      .catch((err) => {
+        btn.disabled = false;
+        btn.textContent = 'Send — I Need Help';
+        document.getElementById('stuckError').style.display = 'block';
+      });
   }
 
   toggleStep(1);
