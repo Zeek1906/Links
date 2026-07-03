@@ -504,6 +504,7 @@
   <div class="stuck-form" id="stuckForm">
     <input type="text" placeholder="Your name" id="stuckName" />
     <input type="text" placeholder="Your organization name" id="stuckOrg" />
+    <input type="email" placeholder="Your email" id="stuckEmail" />
     <select id="stuckStep">
       <option value="">Where did you get stuck?</option>
       <option value="Step 1 — Welcome from Beacon">Step 1 — Welcome from Beacon</option>
@@ -773,13 +774,14 @@
   async function submitStuck() {
     var name = document.getElementById('stuckName').value.trim();
     var org = document.getElementById('stuckOrg').value.trim();
+    var email = document.getElementById('stuckEmail').value.trim();
     var step = document.getElementById('stuckStep').value;
     var note = document.getElementById('stuckNote').value.trim();
-    if (!name || !org || !step) { alert('Please fill in your name, organization, and where you got stuck.'); return; }
+    if (!name || !org || !email || !step) { alert('Please fill in your name, organization, email, and where you got stuck.'); return; }
     var btn = document.getElementById('stuckSubmitBtn');
     btn.disabled = true;
     btn.textContent = 'Sending...';
-    var payload = { name: name, organization: org, stuck_on: step, note: note || 'No additional details provided.', submitted_at: new Date().toISOString() };
+    var payload = { name: name, organization: org, email: email, stuck_on: step, note: note || 'No additional details provided.', source: 'onboarding', submitted_at: new Date().toISOString() };
     try {
       await fetch('https://hook.us2.make.com/5p0ylt8hddjm6n0fc0yvjq2ka7dxgo5y', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       document.getElementById('stuckForm').style.display = 'none';
