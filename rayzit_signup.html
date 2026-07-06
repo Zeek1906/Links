@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAYZIT Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #212730;
+    --blue: #0074FF;
+    --gold: #FBBE01;
+    --green: #4FB96D;
+    --bg: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card-bg: #f8f9ff;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(33,39,48,0.08);
+    --shadow-hover: 0 8px 32px rgba(33,39,48,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+  .navbar { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .nav-logo-text { font-weight: 900; font-size: 17px; letter-spacing: 2px; color: var(--navy); }
+  .nav-tag { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--navy); background: rgba(33,39,48,0.06); border: 1px solid rgba(33,39,48,0.15); padding: 5px 12px; border-radius: 999px; text-transform: uppercase; }
+
+  .progress-wrap { background: var(--navy); padding: 12px 28px; }
+  .progress-inner { max-width: 800px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+  .progress-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: rgba(255,255,255,0.5); text-transform: uppercase; white-space: nowrap; }
+  .progress-bar-wrap { flex: 1; background: rgba(255,255,255,0.15); border-radius: 999px; height: 6px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 999px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+  .progress-count { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
+
+  .hero { background: linear-gradient(135deg, rgba(33,39,48,0.92) 0%, rgba(0,116,255,0.75) 100%), #212730; padding: 56px 28px 52px; text-align: center; }
+  .hero-tag { display: inline-block; background: var(--gold); color: #000; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 5px 14px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase; font-weight: 700; }
+  .hero h1 { font-size: 34px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+  .hero h1 span { color: var(--gold); }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; max-width: 480px; margin: 0 auto 24px; }
+
+  .content { max-width: 800px; margin: 0 auto; padding: 40px 16px; }
+
+  .phase-header { display: flex; align-items: center; gap: 12px; padding: 28px 0 12px; flex-wrap: wrap; }
+  .phase-badge { background: var(--navy); color: #fff; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 5px 14px; border-radius: 999px; text-transform: uppercase; white-space: nowrap; }
+  .phase-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+
+  .step-card {
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+  }
+
+  .step-card:hover { border-color: var(--blue); box-shadow: var(--shadow); }
+  .step-card.completed { border-color: var(--green); }
+  .step-card.active { border-color: var(--blue); box-shadow: var(--shadow-hover); }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    cursor: pointer;
+    background: var(--card-bg);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .step-check {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: white;
+  }
+
+  .step-card.completed .step-check { background: var(--green); border-color: var(--green); color: white; font-weight: bold; }
+  .step-card.active .step-check { border-color: var(--blue); }
+
+  .step-num-badge {
+    background: var(--navy);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .step-card.completed .step-num-badge { background: var(--green); }
+
+  .step-info { flex: 1; min-width: 0; }
+  .step-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .step-card.completed .step-name { color: var(--muted); text-decoration: line-through; }
+
+  .step-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+  .step-video-badge { background: var(--blue); color: white; padding: 4px 8px; border-radius: 4px; font-family: 'Space Mono', monospace; font-weight: 600; }
+
+  .step-chevron { color: var(--muted); font-size: 16px; transition: transform 0.3s ease; }
+  .step-card.open .step-chevron { transform: rotate(90deg); }
+
+  .step-body {
+    padding: 24px;
+    display: none;
+    background: white;
+  }
+
+  .step-body.open { display: block; }
+
+  .step-description { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+
+  .step-subheading {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .items-list {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+
+  .items-list li {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .items-list .item-num {
+    font-family: 'Space Mono', monospace;
+    min-width: 24px;
+    height: 24px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .tip-box {
+    background: #FFFAEB;
+    border-left: 4px solid var(--gold);
+    padding: 16px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+
+  .tip-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .tip-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  .info-box {
+    background: #E6F2FF;
+    border-left: 4px solid var(--blue);
+    padding: 16px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+
+  .info-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .info-box-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  .button-group { display: flex; flex-direction: column; gap: 12px; }
+
+  .btn {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+  }
+
+  .btn-primary:hover { background: #0052CC; box-shadow: var(--shadow-hover); }
+
+  .btn-secondary {
+    background: white;
+    color: var(--text);
+    border: 2px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--blue); }
+
+  .link-blue { color: var(--blue); text-decoration: none; font-weight: 600; }
+  .link-blue:hover { text-decoration: underline; }
+
+  .stuck-section { background: #fff; border: 2px solid #fee2e2; border-radius: var(--radius); padding: 22px; margin: 24px 0; box-shadow: var(--shadow); }
+  .stuck-title { font-weight: 800; font-size: 15px; color: #dc2626; margin-bottom: 6px; }
+  .stuck-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+  .stuck-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
+  .stuck-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .stuck-divider-text { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+  .stuck-form { display: flex; flex-direction: column; gap: 10px; }
+  .stuck-form input, .stuck-form select, .stuck-form textarea { background: #f9fafb; border: 2px solid var(--border); border-radius: 10px; padding: 11px 14px; font-family: 'Poppins', sans-serif; font-size: 14px; color: var(--text); width: 100%; outline: none; transition: border-color 0.2s; }
+  .stuck-form input:focus, .stuck-form select:focus, .stuck-form textarea:focus { border-color: var(--blue); }
+  .stuck-form textarea { resize: vertical; min-height: 76px; }
+  .stuck-submit { background: #dc2626; color: #fff; border: none; border-radius: 999px; padding: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .stuck-submit:hover { background: #b91c1c; }
+  .stuck-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+  .stuck-sent { display: none; text-align: center; padding: 16px; color: var(--green); font-size: 14px; font-weight: 600; }
+  .stuck-error { display: none; text-align: center; padding: 10px; color: #dc2626; font-size: 13px; }
+
+  .contact-card { background: linear-gradient(135deg, var(--navy), #1a3a5c); border-radius: var(--radius); padding: 22px; display: flex; align-items: center; gap: 16px; margin: 24px 0; }
+  .contact-info h3 { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+  .contact-info p { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+  .contact-badge { display: inline-block; margin-top: 5px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px; color: #000; background: var(--gold); padding: 3px 10px; border-radius: 999px; text-transform: uppercase; font-weight: 700; }
+
+  .footer { text-align: center; padding: 28px 16px; border-top: 2px solid var(--border); margin-top: 32px; }
+  .footer-brand { font-weight: 900; font-size: 14px; letter-spacing: 3px; color: var(--navy); display: block; margin-bottom: 4px; }
+  .footer-gold-line { width: 50px; height: 3px; background: var(--gold); border-radius: 999px; margin: 8px auto; }
+  .footer-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <div style="font-weight: 900; font-size: 17px; letter-spacing: 2px; color: var(--navy);">RAYZIT</div>
+    <div class="nav-tag">Account Creation</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <span class="progress-label">Step</span>
+      <span class="progress-count"><span id="current-step">1</span>/2</span>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar" style="width: 0%;"></div>
+      </div>
+      <span class="progress-label">Complete</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-tag">Account Requirements</div>
+    <h1>Complete Both <span>Steps</span> Below</h1>
+  </div>
+
+  <div class="content">
+    <div class="step-card active" data-step="1">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-check"></div>
+        <div class="step-num-badge">1</div>
+        <div class="step-info">
+          <div class="step-name">Create Your Stripe Account</div>
+          <div class="step-meta">
+            <span class="step-video-badge">VIDEO</span>
+            <span style="color: var(--muted);">2:04</span>
+          </div>
+        </div>
+        <div class="step-chevron">▼</div>
+      </div>
+      <div class="step-body open">
+        <p class="step-description">
+          To receive donations through your RAYZIT account, your organization must also have a Stripe account. Stripe is how donations are securely transferred to your bank account. If your organization does not currently have one, follow the steps below to create it.
+        </p>
+
+        <div class="step-subheading">Steps to create your Stripe account</div>
+        <ol class="items-list">
+          <li>
+            <span class="item-num">1</span>
+            <span>Visit www.stripe.com and click Get Started</span>
+          </li>
+          <li>
+            <span class="item-num">2</span>
+            <span>Create your account using your organization's email address</span>
+          </li>
+          <li>
+            <span class="item-num">3</span>
+            <span>Follow Stripe's onboarding steps to verify your organization</span>
+          </li>
+          <li>
+            <span class="item-num">4</span>
+            <span>If your organization qualifies as a nonprofit, identify it as such during setup</span>
+          </li>
+          <li>
+            <span class="item-num">5</span>
+            <span>Once your Stripe account is active, you are ready for Step 2</span>
+          </li>
+        </ol>
+
+        <div class="tip-box">
+          <div class="tip-label">Tip</div>
+          <div class="tip-text">Stripe verification typically takes 1-2 business days. Plan ahead if you're launching soon.</div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary">▶ Watch - Step 1 Video (2:04)</button>
+          <button class="btn btn-secondary" onclick="markStepComplete(this)">✓ Mark Step Complete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" data-step="2">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-check"></div>
+        <div class="step-num-badge">2</div>
+        <div class="step-info">
+          <div class="step-name">Submit Your Required Assets</div>
+          <div class="step-meta">
+            <span class="step-video-badge">FINAL STEP</span>
+            <span style="color: var(--muted);">2:23</span>
+          </div>
+        </div>
+        <div class="step-chevron">▶</div>
+      </div>
+      <div class="step-body">
+        <p class="step-description">
+          In order to build your RAYZIT app to match your organization's branding, we need a few items from you. Gather everything below and send it to us in one email. Your account will be created within 48 hours of receiving your assets.
+        </p>
+
+        <div class="step-subheading">Items to include in your email</div>
+        <ol class="items-list">
+          <li>
+            <span class="item-num">1</span>
+            <span><strong>Admin email address</strong> — the email you will use to log in to your RAYZIT back office</span>
+          </li>
+          <li>
+            <span class="item-num">2</span>
+            <span><strong>Organization logo</strong> — preferred as a transparent PNG file. If you need help with a logo creation, try visiting fiverr.com</span>
+          </li>
+          <li>
+            <span class="item-num">3</span>
+            <span><strong>Home page photo</strong> — a photo representing your organization or mission that will appear on your app home page</span>
+          </li>
+          <li>
+            <span class="item-num">4</span>
+            <span><strong>Two HEX color codes</strong> — your organization's two primary brand colors. Not sure? Use imagecolorpicker.com</span>
+          </li>
+        </ol>
+
+        <div class="tip-box">
+          <div class="tip-label">Tip</div>
+          <div class="tip-text">Send everything in one email so our team can process your account creation without delays. The more complete your submission the faster your account is ready.</div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-label">Send your assets here</div>
+          <div class="info-box-text">
+            Email all four items to our team at <strong>info@rayzit.com</strong>. Your account will be created within 48 hours of receiving your complete submission.
+          </div>
+        </div>
+
+        <div class="button-group">
+          <a href="mailto:info@rayzit.com" class="btn btn-primary">✉ Email info@rayzit.com</a>
+          <button class="btn btn-primary">▶ Watch - Step 2 Video (2:23)</button>
+          <button class="btn btn-secondary" onclick="markStepComplete(this)">✓ Mark Step Complete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stuck-section">
+      <div class="stuck-title">🛑 Stuck or Have a Question?</div>
+      <div class="stuck-desc">No problem. Fill out the form below and our support team will get back to you within 24 hours.</div>
+      <div class="stuck-divider">
+        <div class="stuck-divider-line"></div>
+        <span class="stuck-divider-text">leave a message</span>
+        <div class="stuck-divider-line"></div>
+      </div>
+      <div class="stuck-form" id="stuckForm">
+        <input type="text" placeholder="Your name" id="stuckName" />
+        <input type="text" placeholder="Your organization name" id="stuckOrg" />
+        <input type="email" placeholder="Your email" id="stuckEmail" />
+        <select id="stuckStep">
+          <option value="">Where did you get stuck?</option>
+          <option value="Step 1 — Create Your Stripe Account">Step 1 — Create Your Stripe Account</option>
+          <option value="Step 2 — Submit Your Required Assets">Step 2 — Submit Your Required Assets</option>
+          <option value="Something else">Something else</option>
+        </select>
+        <textarea placeholder="Tell us what's happening (optional)" id="stuckNote"></textarea>
+        <button class="stuck-submit" id="stuckSubmitBtn" onclick="submitStuck()">Send — I Need Help</button>
+      </div>
+      <div class="stuck-error" id="stuckError">Something went wrong. Please email support@rayzit.com directly.</div>
+      <div class="stuck-sent" id="stuckSent">✅ Got it. Our support team will reach out within 24 hours.</div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-info">
+        <h3>RAYZIT Support Specialist</h3>
+        <p>support@rayzit.com</p>
+        <span class="contact-badge">Responds within 24 hrs</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="footer-brand">RAYZIT</span>
+      <div class="footer-gold-line"></div>
+      <span class="footer-sub">Digital Giving Infrastructure</span>
+    </div>
+  </div>
+
+  <script>
+    function toggleStep(headerElement) {
+      const card = headerElement.closest('.step-card');
+      const body = card.querySelector('.step-body');
+      const chevron = headerElement.querySelector('.step-chevron');
+      
+      body.classList.toggle('open');
+      card.classList.toggle('open');
+      chevron.textContent = body.classList.contains('open') ? '▼' : '▶';
+      
+      updateProgress();
+    }
+
+    function markStepComplete(button) {
+      const card = button.closest('.step-card');
+      const check = card.querySelector('.step-check');
+      
+      card.classList.toggle('completed');
+      if (card.classList.contains('completed')) {
+        check.textContent = '✓';
+      } else {
+        check.textContent = '';
+      }
+      
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const cards = document.querySelectorAll('.step-card');
+      const completedCount = document.querySelectorAll('.step-card.completed').length;
+      const progressBar = document.getElementById('progress-bar');
+      const currentStep = document.getElementById('current-step');
+      
+      const percentage = (completedCount / cards.length) * 100;
+      progressBar.style.width = percentage + '%';
+      currentStep.textContent = completedCount + 1 > cards.length ? cards.length : completedCount + 1;
+    }
+
+    async function submitStuck() {
+      var name = document.getElementById('stuckName').value.trim();
+      var org = document.getElementById('stuckOrg').value.trim();
+      var email = document.getElementById('stuckEmail').value.trim();
+      var step = document.getElementById('stuckStep').value;
+      var note = document.getElementById('stuckNote').value.trim();
+      if (!name || !org || !email || !step) { alert('Please fill in your name, organization, email, and where you got stuck.'); return; }
+      var btn = document.getElementById('stuckSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      var payload = { name: name, organization: org, email: email, stuck_on: step, note: note || 'No additional details provided.', source: 'signup', submitted_at: new Date().toISOString() };
+      try {
+        await fetch('https://hook.us2.make.com/5p0ylt8hddjm6n0fc0yvjq2ka7dxgo5y', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        document.getElementById('stuckForm').style.display = 'none';
+        document.getElementById('stuckSent').style.display = 'block';
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Send — I Need Help';
+        document.getElementById('stuckError').style.display = 'block';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const firstCard = document.querySelector('.step-card');
+      firstCard.classList.add('open');
+      updateProgress();
+    });
+  </script>
+</body>
+</html>
